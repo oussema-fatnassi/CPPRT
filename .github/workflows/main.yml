@@ -1,0 +1,63 @@
+name: Move Issue to Ready Column
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  move_issue_to_ready:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Check out the repository
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # Step 2: Install GitHub CLI
+    - name: Install GitHub CLI
+      run: sudo apt-get install -y gh
+
+    # Step 3: Authenticate GitHub CLI
+    - name: Authenticate GitHub CLI
+      run: gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
+
+    # Step 4: Move the issue to "Ready" column
+    - name: Move Issue to Ready Column
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        # Set variables for easier reuse
+        ORG="<oussema-fatnassi"
+        REPO="<CPPRT>"
+        PROJECT_NUMBER=<PROJECT_NUMBER>
+        COLUMN_NAME="Ready"
+
+        # Get the project ID
+        PROJECT_ID=$(gh api graphql -f query='
+        query($owner: String!, $projectNumber: Int!) {
+          organization(login: $owner) {
+            projectV2(number: $projectNumber) {
+              id
+            }
+          }
+        }' -F owner="$ORG" -F projectNumber="$PROJECT_NUMBER" -q '.data.organization.projectV2.id')
+
+        # Get the issue ID
+        ISSUE_ID=$(gh api graphql -f query='
+        query($owner: String!, $repo: String!, $issueNumber: Int!) {
+          repository(owner: $owner, name: $repo) {
+            issue(number: $issueNumber) {
+              id
+            }
+          }
+        }' -F owner="$ORG" -F repo="$REPO" -F issueNumber="${{ github.event.issue.number }}" -q '.data.repository.issue.id')
+
+        # Add the issue to the "Ready" column in the project
+        gh api graphql -f query='
+        mutation($projectId: ID!, $contentId: ID!) {
+          addProjectV2ItemById(input: {projectId: $projectId, contentId: $contentId}) {
+            item {
+              id
+            }
+          }
+        }' -F projectId="$PROJECT_ID" -F contentId="$ISSUE_ID"
