@@ -11,9 +11,6 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Set CMake prefix path for Qt
-set(CMAKE_PREFIX_PATH "/Users/ousse/Qt2/6.8.0/macos")
-
 # Find Qt packages
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
@@ -53,27 +50,32 @@ include_directories(${HEADER_DIR})
 # Link Qt Widgets library
 target_link_libraries(Server PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
-# Set target properties for macOS bundle or Windows executable
-set_target_properties(Server PROPERTIES
-    MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE
-)
-
-# macOS bundle identifier (for versions earlier than Qt 6.1)
-if(${QT_VERSION} VERSION_LESS 6.1.0)
-  set_target_properties(Server PROPERTIES
-    MACOSX_BUNDLE_GUI_IDENTIFIER com.example.Server
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-  )
+# Set target properties for macOS and Windows
+if(APPLE)
+    # macOS settings
+    set_target_properties(Server PROPERTIES
+        MACOSX_BUNDLE TRUE
+    )
+    if(${QT_VERSION} VERSION_LESS 6.1.0)
+      set_target_properties(Server PROPERTIES
+        MACOSX_BUNDLE_GUI_IDENTIFIER com.example.Server
+        MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+        MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+      )
+    endif()
+elseif(WIN32)
+    # Windows settings
+    set_target_properties(Server PROPERTIES
+        WIN32_EXECUTABLE TRUE
+    )
 endif()
 
-# Finalize executable for Qt 6
+# Finalize executable for Qt 6 on both platforms
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(Server)
 endif()
 
-# Install directives
+# Install directives for both platforms
 include(GNUInstallDirs)
 install(TARGETS Server
     BUNDLE DESTINATION .
