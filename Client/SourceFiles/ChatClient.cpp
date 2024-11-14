@@ -33,9 +33,15 @@ void ChatClient::handleConnected() {
     qDebug() << "Connected to server";
 }
 
+
 void ChatClient::handleReadyRead() {
     QByteArray data = m_tcpSocket->readAll();
-    qDebug() << "Received echo from server:" << data;
+    QString message = QString::fromUtf8(data);
+
+    if (message.startsWith(m_name + ":")) {
+        message.replace(0, m_name.length(), "You");
+    }
+    qDebug() << message;
 }
 
 void ChatClient::handleDisconnected() {

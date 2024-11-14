@@ -20,27 +20,33 @@ void ChatServer::handleNewConnection() {
     QTcpSocket* socket = m_tcpServer->nextPendingConnection();
     connect(socket, &QTcpSocket::readyRead, this, &ChatServer::handleReadyRead);
     connect(socket, &QTcpSocket::disconnected, this, &ChatServer::handleDisconnection);
+    m_clients.insert(socket);
     qDebug() << "New client connected from" << socket->peerAddress().toString();
 }
 
 void ChatServer::handleReadyRead() {
-    QTcpSocket* socket = qobject_cast<QTcpSocket*>(sender());
-    if (socket) {
-        QByteArray data = socket->readAll();
+    QTcpSocket* senderSocket = qobject_cast<QTcpSocket*>(sender());
+    if (senderSocket) {
+        QByteArray data = senderSocket->readAll();
         QString message = QString::fromUtf8(data);
 
-        // Check if the message is a name setup message
         if (message.startsWith("NAME:")) {
             QString name = message.mid(5).trimmed();
-            m_clientNames[socket] = name;
-            qDebug() << "Client name set to" << name << "from" << socket->peerAddress().toString();
+            m_clientNames[senderSocket] = name;
+            qDebug() << "Client name set to" << name << "from" << senderSocket->peerAddress().toString();
         } else {
-            QString senderName = m_clientNames.value(socket, "Unknown");
-            qDebug() << "Message from" << senderName << "(" << socket->peerAddress().toString() << "):" << message;
-            socket->write(data); // Echo back the message
+            QString senderName = m_clientNames.value(senderSocket, "Unknown");
+            QString fullMessage = senderName + ": " + message;
+
+            for (QTcpSocket* clientSocket : m_clients) {
+                clientSocket->write(fullMessage.toUtf8());
+            }
+            qDebug() << "Broadcast message from" << senderName << ":" << message;
         }
     }
 }
+
+
 
 void ChatServer::handleDisconnection() {
     QTcpSocket* socket = qobject_cast<QTcpSocket*>(sender());
@@ -48,6 +54,7 @@ void ChatServer::handleDisconnection() {
         QString name = m_clientNames.value(socket, "Unknown");
         qDebug() << "Client" << name << "disconnected from" << socket->peerAddress().toString();
         m_clientNames.remove(socket);
+        m_clients.remove(socket);
         socket->deleteLater();
     }
 }

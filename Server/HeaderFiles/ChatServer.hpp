@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QTcpServer>
+#include <QSet>
 
 class ChatServer : public QObject {
     Q_OBJECT
@@ -19,6 +20,7 @@ private slots:
 private:
     QTcpServer* m_tcpServer;
     QMap<QTcpSocket*, QString> m_clientNames;
+    QSet<QTcpSocket*> m_clients;
 };
 
 #endif // CHAT_SERVER_H
