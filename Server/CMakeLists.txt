@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.16)
-
 project(Server VERSION 0.1 LANGUAGES CXX)
 
 # Enable automatic Qt features
@@ -12,8 +11,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Find Qt packages
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Network Widgets)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Network Widgets)
 
 # Define source, header, and UI directories
 set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/SourceFiles")
@@ -47,8 +46,8 @@ endif()
 # Include directories for headers
 include_directories(${HEADER_DIR})
 
-# Link Qt Widgets library
-target_link_libraries(Server PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+# Link Qt Core, Network, and Widgets libraries
+target_link_libraries(Server PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Network Qt${QT_VERSION_MAJOR}::Widgets)
 
 # Set target properties for macOS and Windows
 if(APPLE)
