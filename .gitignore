@@ -102,3 +102,4 @@ CMakeLists.txt.user*
 build
 
 .env
+.qtcreator
