@@ -27,16 +27,27 @@ void ChatServer::handleReadyRead() {
     QTcpSocket* socket = qobject_cast<QTcpSocket*>(sender());
     if (socket) {
         QByteArray data = socket->readAll();
-        qDebug() << "Received data from client:" << data;
+        QString message = QString::fromUtf8(data);
 
-        socket->write(data);
+        // Check if the message is a name setup message
+        if (message.startsWith("NAME:")) {
+            QString name = message.mid(5).trimmed();
+            m_clientNames[socket] = name;
+            qDebug() << "Client name set to" << name << "from" << socket->peerAddress().toString();
+        } else {
+            QString senderName = m_clientNames.value(socket, "Unknown");
+            qDebug() << "Message from" << senderName << "(" << socket->peerAddress().toString() << "):" << message;
+            socket->write(data); // Echo back the message
+        }
     }
 }
 
 void ChatServer::handleDisconnection() {
     QTcpSocket* socket = qobject_cast<QTcpSocket*>(sender());
     if (socket) {
-        qDebug() << "Client disconnected from" << socket->peerAddress().toString();
+        QString name = m_clientNames.value(socket, "Unknown");
+        qDebug() << "Client" << name << "disconnected from" << socket->peerAddress().toString();
+        m_clientNames.remove(socket);
         socket->deleteLater();
     }
 }

@@ -18,6 +18,7 @@ private slots:
 
 private:
     QTcpServer* m_tcpServer;
+    QMap<QTcpSocket*, QString> m_clientNames;
 };
 
 #endif // CHAT_SERVER_H
