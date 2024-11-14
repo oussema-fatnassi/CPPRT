@@ -10,7 +10,7 @@ class ChatClient : public QObject {
     Q_OBJECT
 
 public:
-    ChatClient(QObject* parent = nullptr);
+    ChatClient(const QString &name, QObject* parent = nullptr);
     void connectToServer(const QHostAddress& host, quint16 port);
     void sendMessage(const QString& message);
     bool isConnected() const;
@@ -22,6 +22,7 @@ private slots:
 
 private:
     QTcpSocket* m_tcpSocket;
+    QString m_name;
 };
 
 #endif // CHAT_CLIENT_H

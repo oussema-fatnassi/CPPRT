@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QTcpSocket>
 
-ChatClient::ChatClient(QObject* parent) : QObject(parent) {
+ChatClient::ChatClient(const QString &name, QObject* parent) : QObject(parent), m_name(name) {
     m_tcpSocket = new QTcpSocket(this);
     connect(m_tcpSocket, &QTcpSocket::connected, this, &ChatClient::handleConnected);
     connect(m_tcpSocket, &QTcpSocket::readyRead, this, &ChatClient::handleReadyRead);
@@ -15,6 +15,7 @@ void ChatClient::connectToServer(const QHostAddress& host, quint16 port) {
     m_tcpSocket->connectToHost(host, port);
     if (m_tcpSocket->waitForConnected(3000)) {
         qDebug() << "Connection established successfully.";
+        m_tcpSocket->write(("NAME:" + m_name).toUtf8());
     } else {
         qDebug() << "Connection failed:" << m_tcpSocket->errorString();
     }

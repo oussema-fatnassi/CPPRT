@@ -39,7 +39,14 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    ChatClient client;
+
+    QString name = QInputDialog::getText(nullptr, "Enter Name", "Please enter your name:");
+    if (name.isEmpty()) {
+        qDebug() << "Name cannot be empty.";
+        return 1;
+    }
+
+    ChatClient client(name);
     client.connectToServer(QHostAddress(ipAddress), port);
 
     QTimer::singleShot(1000, [&client]() {
