@@ -9,8 +9,8 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    WizzEffect *wizzEffect = new WizzEffect(&w);  // Corrected line
-    wizzEffect->start();
+    // WizzEffect *wizzEffect = new WizzEffect(&w);  // Corrected line
+    // wizzEffect->start();
 
     return a.exec();
 }
