@@ -1,5 +1,22 @@
+
 // #include "MainWindow.hpp"
 // #include "WizzEffect.hpp"
+// #include "MainWindow.hpp"
+// #include "WizzEffect.hpp"
+
+// #include <QApplication>
+
+// int main(int argc, char *argv[])
+// {
+//     QApplication a(argc, argv);
+//     MainWindow w;
+//     w.show();
+
+//     // WizzEffect *wizzEffect = new WizzEffect(&w);  // Corrected line
+//     // wizzEffect->start();
+
+//     return a.exec();
+// }
 
 // #include <QApplication>
 
