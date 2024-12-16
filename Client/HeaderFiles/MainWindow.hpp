@@ -12,6 +12,9 @@
 #include <QPushButton>
 #include <QMenuBar>
 #include <QStatusBar>
+#include <QStandardItemModel>
+#include <QKeyEvent>
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -35,6 +38,8 @@ private:
     void setupConnections();
 
     Ui::MainWindow *ui;
+    QStandardItemModel *listViewModel;
+    bool eventFilter(QObject *obj, QEvent *event);
 };
 
 #endif // MAINWINDOW_HPP
