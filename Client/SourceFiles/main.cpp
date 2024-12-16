@@ -44,7 +44,13 @@
 
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
-    QFileInfo envFileInfo("../../../../../.env");
+    #ifdef _WIN32
+        QFileInfo envFileInfo("../../.env");
+    #endif
+
+    #ifdef __APPLE__
+        QFileInfo envFileInfo("../../../../../.env");
+    #endif
     QString envFilePath = envFileInfo.absoluteFilePath();
     if (!loadEnvFile(envFilePath)) {
         qDebug() << "Failed to load .env file.";
