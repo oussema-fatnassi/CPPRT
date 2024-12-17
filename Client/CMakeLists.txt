@@ -9,7 +9,7 @@ set(CMAKE_AUTORCC ON)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD_REQUIRED ON) 
 
 # Find Qt packages
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Network Widgets)
