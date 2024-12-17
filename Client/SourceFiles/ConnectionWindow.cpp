@@ -5,6 +5,7 @@
 #include "EnvLoader.hpp"
 #include <QMessageBox>
 #include <QFileInfo>
+#include "MainWindow.hpp"
 
 ConnectionWindow::ConnectionWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::ConnectionWindow), chatClient(nullptr) {
@@ -74,6 +75,12 @@ void ConnectionWindow::onButtonConnectionClicked() {
 
     if (connectionResult) {
         QMessageBox::information(this, "Connection", "Successfully connected to the server!");
+        MainWindow *mainWindow = new MainWindow();
+        mainWindow->setChatClient(chatClient);
+
+        // Show the MainWindow and close ConnectionWindow
+        mainWindow->show();
+        this->close();
     } else {
         QMessageBox::critical(this, "Connection Error", "Failed to connect to the server");
         delete chatClient;

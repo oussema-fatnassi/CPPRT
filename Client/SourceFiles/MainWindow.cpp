@@ -6,7 +6,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , ui(new Ui::MainWindow), chatClient(nullptr)
 {
     ui->setupUi(this);
     setFixedSize(1100, 600);
@@ -23,6 +23,11 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::setChatClient(ChatClient* client) {
+    this->chatClient = client;
+    qDebug() << "ChatClient passed to MainWindow!";
 }
 
 void MainWindow::setupMainWindowUI()

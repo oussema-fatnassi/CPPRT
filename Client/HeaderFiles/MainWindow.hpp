@@ -14,6 +14,7 @@
 #include <QStatusBar>
 #include <QStandardItemModel>
 #include <QKeyEvent>
+#include "ChatClient.hpp"
 
 
 QT_BEGIN_NAMESPACE
@@ -29,6 +30,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void setChatClient(ChatClient* client);
 
 private slots:
     void onBtnSendClicked();
@@ -36,6 +38,7 @@ private slots:
 
 private:
     void setupMainWindowUI();
+    ChatClient *chatClient;
 
     Ui::MainWindow *ui;
     QStandardItemModel *listViewModel;
