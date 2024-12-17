@@ -12,6 +12,10 @@
 #include <QPushButton>
 #include <QMenuBar>
 #include <QStatusBar>
+#include <QStandardItemModel>
+#include <QKeyEvent>
+#include "ChatClient.hpp"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -26,15 +30,19 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void setChatClient(ChatClient* client);
 
 private slots:
     void onBtnSendClicked();
     void onPushButtonWizzClicked();
 
 private:
-    void setupConnections();
+    void setupMainWindowUI();
+    ChatClient *chatClient;
 
     Ui::MainWindow *ui;
+    QStandardItemModel *listViewModel;
+    bool eventFilter(QObject *obj, QEvent *event);
 };
 
 #endif // MAINWINDOW_HPP

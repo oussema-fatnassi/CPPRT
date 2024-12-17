@@ -11,14 +11,27 @@ ChatClient::ChatClient(const QString &name, QObject* parent)
     connect(m_tcpSocket, &QTcpSocket::disconnected, this, &ChatClient::handleDisconnected);
 }
 
-void ChatClient::connectToServer(const QHostAddress& host, quint16 port) {
+bool ChatClient::connectToServer(const QHostAddress& host, quint16 port) {
     qDebug() << "Attempting to connect to server at" << host.toString() << "on port" << port;
+
+    // Check if socket is valid
+    if (!m_tcpSocket) {
+        qDebug() << "TCP Socket is null";
+        return false;
+    }
+
     m_tcpSocket->connectToHost(host, port);
-    if (m_tcpSocket->waitForConnected(3000)) {
+
+    // Wait for connection with a timeout
+    if (m_tcpSocket->waitForConnected(5000)) { // Increased timeout to 5 seconds
         qDebug() << "Connection established successfully.";
         m_tcpSocket->write(("NAME:" + m_name).toUtf8());
+        return true;  // Connection successful
     } else {
+        // Log the specific error
         qDebug() << "Connection failed:" << m_tcpSocket->errorString();
+        qDebug() << "Socket state:" << m_tcpSocket->state();
+        return false;  // Connection failed
     }
 }
 
