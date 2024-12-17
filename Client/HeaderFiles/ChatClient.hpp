@@ -10,7 +10,7 @@ class ChatClient : public QObject {
     Q_OBJECT
 public:
     ChatClient(const QString &name, QObject* parent = nullptr);
-    void connectToServer(const QHostAddress& host, quint16 port);
+    bool connectToServer(const QHostAddress& host, quint16 port);
     void sendMessage(const QString& message);
     void sendDirectMessage(const QString& targetName, const QString& message);
     bool isConnected() const;
