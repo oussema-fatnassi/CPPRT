@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setFixedSize(1100, 600);
     setWindowTitle("Client");
 
     // Initialize the model for the QListView
@@ -16,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->listView->setModel(listViewModel);
 
     // Set up connections
-    setupConnections();
+    setupMainWindowUI();
 }
 
 MainWindow::~MainWindow()
@@ -24,15 +25,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::setupConnections()
+void MainWindow::setupMainWindowUI()
 {
     // Connect buttons to their respective slots
     connect(ui->buttonSend, &QPushButton::clicked, this, &MainWindow::onBtnSendClicked);
     connect(ui->buttonWizz, &QPushButton::clicked, this, &MainWindow::onPushButtonWizzClicked);
 
     ui->textEdit->installEventFilter(this);
-
-
 }
 
 void MainWindow::onBtnSendClicked()
@@ -79,16 +78,14 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
             // Insert a new line
             QTextCursor cursor = ui->textEdit->textCursor();
             cursor.insertText("\n");
-            return true; // Consume the event
+            return true;
         }
 
         // Check if only Enter is pressed
         if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter) {
-            onBtnSendClicked(); // Trigger send action
-            return true;        // Consume the event
+            onBtnSendClicked();
+            return true;
         }
     }
     return QMainWindow::eventFilter(obj, event);
 }
-
-

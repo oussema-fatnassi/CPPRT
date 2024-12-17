@@ -35,7 +35,7 @@ private slots:
     void onPushButtonWizzClicked();
 
 private:
-    void setupConnections();
+    void setupMainWindowUI();
 
     Ui::MainWindow *ui;
     QStandardItemModel *listViewModel;

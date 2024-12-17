@@ -1,35 +1,31 @@
 
-#include "MainWindow.hpp"
-#include "WizzEffect.hpp"
-#include "MainWindow.hpp"
-#include "WizzEffect.hpp"
+// #include "MainWindow.hpp"
+// #include "WizzEffect.hpp"
+// #include "MainWindow.hpp"
+// #include "WizzEffect.hpp"
 
-#include <QApplication>
+// #include <QApplication>
 
 // int main(int argc, char *argv[])
 // {
 //     QApplication a(argc, argv);
 //     MainWindow w;
 //     w.show();
-
-//     // WizzEffect *wizzEffect = new WizzEffect(&w);  // Corrected line
-//     // wizzEffect->start();
-
 //     return a.exec();
 // }
 
-// #include <QApplication>
+#include "ConnectionWindow.hpp"
+#include <QApplication>
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+    QApplication app(argc, argv);
 
-    // WizzEffect *wizzEffect = new WizzEffect(&w);  // Corrected line
-    // wizzEffect->start();
+    // Create and display the connection window
+    ConnectionWindow connectionWindow;
+    connectionWindow.show();
 
-    return a.exec();
+    return app.exec();
 }
 
 
