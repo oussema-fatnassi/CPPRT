@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Create and show the MainWindow
-    MainWindow w;
+    MainWindow w(&server);
     w.show();
 
     return app.exec(); // Start the Qt event loop

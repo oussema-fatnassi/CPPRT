@@ -12,6 +12,8 @@
 #include <QPushButton>
 #include <QCheckBox>
 #include <QTabWidget>
+#include <QTcpSocket>
+#include "ChatServer.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -24,17 +26,20 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(ChatServer* server, QWidget *parent = nullptr);
     ~MainWindow();
 
 private slots:
     void onDisconnectButtonClicked();
+    void onDisconnectAllButtonClicked();
     void onSendMessageTab1Clicked();
     void onSendMessageTab2Clicked();
-    void onCheckBoxStateChanged(int state);
+    void updateClientList();
 
 private:
     Ui::MainWindow *ui;
+
+    ChatServer* m_chatServer; // Declaration of the member for the chat server
 
     void setupConnections();
 };
