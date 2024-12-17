@@ -30,29 +30,25 @@ void MainWindow::setupConnections()
     connect(ui->pushButton_2, &QPushButton::clicked, this, &MainWindow::onSendMessageTab2Clicked);
 }
 
-void MainWindow::onDisconnectButtonClicked()
-{
+void MainWindow::onDisconnectButtonClicked() {
     // Retrieve the selected item in the client list
     QListWidgetItem *selectedItem = ui->listWidget->currentItem();
     if (selectedItem) {
-        // Extract the client identifier (e.g., the username)
         QString clientIdentifier = selectedItem->text();
 
-        // Disconnect the client via the server
+        // Request the server to disconnect the client
         if (m_chatServer) {
-            QTcpSocket* clientSocket = m_chatServer->getSocketByName(clientIdentifier);
-            if (clientSocket) {
-                clientSocket->disconnectFromHost(); // Triggers handleDisconnection in ChatServer
-                qDebug() << "Client" << clientIdentifier << "disconnected successfully.";
-            } else {
-                qDebug() << "Client with identifier" << clientIdentifier << "not found on the server.";
-            }
-        }
+            // Use the server's existing disconnection mechanism
+            m_chatServer->disconnectClientByName(clientIdentifier);
 
-        // Remove the item from the client list
-        delete selectedItem;
+            // Do NOT manually delete the item here
+            // Let the server's disconnection handler update the UI
+        }
     }
 }
+
+
+
 
 void MainWindow::onDisconnectAllButtonClicked()
 {
@@ -89,16 +85,12 @@ void MainWindow::onSendMessageTab2Clicked()
     qDebug() << "Send message button clicked in Tab 2.";
 }
 
-void MainWindow::updateClientList()
-{
+void MainWindow::updateClientList() {
     if (m_chatServer) {
-        // Get the list of connected clients from the server
         QList<QString> clientList = m_chatServer->getConnectedClients();
 
-        // Clear the current list
+        // Clear and repopulate the client list
         ui->listWidget->clear();
-
-        // Add each client to the list widget
         for (const QString &client : clientList) {
             ui->listWidget->addItem(client);
         }
