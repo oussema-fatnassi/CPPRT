@@ -16,6 +16,8 @@ signals:
 
 public:
     ChatServer(QObject* parent = nullptr);
+    void disconnectClientByName(const QString &clientName);
+
     bool start(quint16 port);
 
 private slots:
@@ -23,8 +25,8 @@ private slots:
     void handleReadyRead();
     void handleDisconnection();
     void broadcastClientList();
-    void addToList(QTcpSocket* socket);
-    void removeFromList(QTcpSocket* socket);
+    // void addToList(QTcpSocket* socket);
+    // void removeFromList(QTcpSocket* socket);
     QList<QString> getConnectedClients();
 
 private:

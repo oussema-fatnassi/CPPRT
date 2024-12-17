@@ -20,7 +20,7 @@ void ChatServer::handleNewConnection() {
     connect(socket, &QTcpSocket::disconnected, this, &ChatServer::handleDisconnection);
     m_clients.insert(socket);
     qDebug() << "New client connected from" << socket->peerAddress().toString();
-    addToList(socket);
+    // addToList(socket);
     emit clientListChanged();
 }
 
@@ -48,24 +48,13 @@ void ChatServer::handleReadyRead() {
 
     if (message.startsWith("NAME:")) {
         QString name = message.mid(5).trimmed();
-        m_clientNames[senderSocket] = name;
+        m_clientNames[senderSocket] = name; // Map the socket to the username
         qDebug() << "Client name set to" << name << "from" << senderSocket->peerAddress().toString();
 
-        // Send welcome message to the new client
-        QString welcomeMessage = "SYSTEM:Welcome " + name + "!";
-        senderSocket->write(welcomeMessage.toUtf8());
-
-        // Notify other clients about the new user
-        QString joinMessage = "SYSTEM:" + name + " has joined the chat";
-        for (QTcpSocket* clientSocket : m_clients) {
-            if (clientSocket != senderSocket) {
-                clientSocket->write(joinMessage.toUtf8());
-            }
-        }
-
-        // Broadcast updated client list to all clients
-        broadcastClientList();
+        emit clientListChanged(); // Notify the UI to update the list
+        broadcastClientList();    // Broadcast updated client list
     }
+
     else if (message.startsWith("DM:")) {
         int firstColon = message.indexOf(':');
         int secondColon = message.indexOf(':', firstColon + 1);
@@ -119,7 +108,7 @@ void ChatServer::handleDisconnection() {
         QString name = m_clientNames.value(socket, "Unknown");
         qDebug() << "Client" << name << "disconnected from" << socket->peerAddress().toString();
 
-        // Notify other clients about the disconnection
+        // Notify remaining clients
         QString disconnectMessage = "SYSTEM:" + name + " has disconnected";
         for (QTcpSocket* clientSocket : m_clients) {
             if (clientSocket != socket) {
@@ -127,53 +116,47 @@ void ChatServer::handleDisconnection() {
             }
         }
 
-        // Remove the client from the list
-        removeFromList(socket);
-        emit clientListChanged();
+        // Clean up socket data
         m_clientNames.remove(socket);
         m_clients.remove(socket);
-        socket->deleteLater();
 
-        // Broadcast updated client list to remaining clients
+        // Ensure proper cleanup
+        socket->close();
+        socket->deleteLater(); // Schedule for deletion
+
+        emit clientListChanged();
         broadcastClientList();
     }
 }
 
-void ChatServer::addToList(QTcpSocket* socket) {
-    if (message.startsWith("NAME:")) {
-    QString name = message.mid(5).trimmed();
-    m_clientNames[senderSocket] = name; // Mettre à jour le nom dans la map
-    qDebug() << "Client name set to" << name << "from" << senderSocket->peerAddress().toString();
 
-    // Ajouter le client à la liste après avoir obtenu son nom
-    addToList(senderSocket);
+// void ChatServer::addToList(QTcpSocket* socket) {
+//     QString name = m_clientNames.value(socket, "Unknown");
+//     m_clientNamesList.append(name);
+// }
 
-    // Envoyer un message de bienvenue
-    QString welcomeMessage = "SYSTEM:Welcome " + name + "!";
-    senderSocket->write(welcomeMessage.toUtf8());
-
-    // Notifier les autres clients de la nouvelle connexion
-    QString joinMessage = "SYSTEM:" + name + " has joined the chat";
-    for (QTcpSocket* clientSocket : m_clients) {
-        if (clientSocket != senderSocket) {
-            clientSocket->write(joinMessage.toUtf8());
-        }
-    }
-
-    // Diffuser la liste des clients mise à jour
-    broadcastClientList();
-    emit clientListChanged();
-}
-}
-
-void ChatServer::removeFromList(QTcpSocket* socket) {
-    QString name = m_clientNames.value(socket, "Unknown");
-    m_clientNamesList.removeOne(name);
-}
+// void ChatServer::removeFromList(QTcpSocket* socket) {
+//     QString name = m_clientNames.value(socket, "Unknown");
+//     m_clientNamesList.removeOne(name);
+// }
 
 QList<QString> ChatServer::getConnectedClients() {
-    for (auto it = m_clientNamesList.begin(); it != m_clientNamesList.end(); ++it) {
-        qDebug() << *it;
-    }
-    return m_clientNamesList;
+    QList<QString> clientList = m_clientNames.values(); // Directly get usernames
+    qDebug() << "Connected Clients:" << clientList;
+    return clientList;
 }
+
+
+void ChatServer::disconnectClientByName(const QString &clientName) {
+    QTcpSocket* clientSocket = getSocketByName(clientName);
+
+    if (clientSocket) {
+        qDebug() << "Disconnecting client:" << clientName;
+
+        // Initiate disconnection
+        clientSocket->disconnectFromHost();
+    } else {
+        qDebug() << "Client" << clientName << "not found on the server.";
+    }
+}
+
