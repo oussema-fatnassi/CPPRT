@@ -34,6 +34,7 @@ private slots:
     void onDisconnectAllButtonClicked();
     void onSendMessageTab1Clicked();
     void onSendMessageTab2Clicked();
+    void updateClientList();
 
 private:
     Ui::MainWindow *ui;

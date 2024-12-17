@@ -11,6 +11,9 @@ class ChatServer : public QObject {
     Q_OBJECT
     friend class MainWindow;
 
+signals:
+    void clientListChanged();
+
 public:
     ChatServer(QObject* parent = nullptr);
     bool start(quint16 port);
@@ -20,6 +23,9 @@ private slots:
     void handleReadyRead();
     void handleDisconnection();
     void broadcastClientList();
+    void addToList(QTcpSocket* socket);
+    void removeFromList(QTcpSocket* socket);
+    QList<QString> getConnectedClients();
 
 private:
     void broadcastMessage(const QString& message, QTcpSocket* sender);
@@ -29,5 +35,6 @@ private:
     QTcpServer* m_tcpServer;
     QMap<QTcpSocket*, QString> m_clientNames;
     QSet<QTcpSocket*> m_clients;
+    QList<QString> m_clientNamesList;
 };
 #endif // CHAT_SERVER_H

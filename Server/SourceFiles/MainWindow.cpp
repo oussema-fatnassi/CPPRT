@@ -11,6 +11,7 @@ MainWindow::MainWindow(ChatServer* server, QWidget *parent)
 
     // Setup widget connections
     setupConnections();
+    connect(m_chatServer, &ChatServer::clientListChanged, this, &MainWindow::updateClientList);
 }
 
 MainWindow::~MainWindow()
@@ -86,4 +87,20 @@ void MainWindow::onSendMessageTab2Clicked()
 {
     // Placeholder to send a message in Tab 2
     qDebug() << "Send message button clicked in Tab 2.";
+}
+
+void MainWindow::updateClientList()
+{
+    if (m_chatServer) {
+        // Get the list of connected clients from the server
+        QList<QString> clientList = m_chatServer->getConnectedClients();
+
+        // Clear the current list
+        ui->listWidget->clear();
+
+        // Add each client to the list widget
+        for (const QString &client : clientList) {
+            ui->listWidget->addItem(client);
+        }
+    }
 }
