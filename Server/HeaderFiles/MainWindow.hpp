@@ -12,6 +12,8 @@
 #include <QPushButton>
 #include <QCheckBox>
 #include <QTabWidget>
+#include <QTcpSocket>
+#include "ChatServer.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -35,6 +37,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    ChatServer* m_chatServer; // Declaration of the member for the chat server
 
     void setupConnections();
 };

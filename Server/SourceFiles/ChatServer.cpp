@@ -1,6 +1,4 @@
 #include "ChatServer.hpp"
-#include <QDebug>
-#include <QTcpSocket>
 
 ChatServer::ChatServer(QObject* parent) : QObject(parent) {
     m_tcpServer = new QTcpServer(this);

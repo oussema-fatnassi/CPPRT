@@ -4,9 +4,13 @@
 #include <QTcpServer>
 #include <QSet>
 #include <QMap>
+#include <QDebug>
+#include <QTcpSocket>
 
 class ChatServer : public QObject {
     Q_OBJECT
+    friend class MainWindow;
+
 public:
     ChatServer(QObject* parent = nullptr);
     bool start(quint16 port);

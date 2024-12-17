@@ -4,11 +4,20 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , m_chatServer(nullptr) // Initialisation du pointeur du serveur
 {
     ui->setupUi(this);
     setWindowTitle("Server");
 
-    // Set up connections
+    // Initialize the chat server
+    m_chatServer = new ChatServer(this);
+    if (!m_chatServer->start(1234)) {
+        qDebug() << "Failed to start the chat server.";
+    } else {
+        qDebug() << "Chat server started successfully.";
+    }
+
+    // Setup widget connections
     setupConnections();
 }
 
@@ -19,33 +28,46 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupConnections()
 {
-    // Connect the Disconnect button
+    // Connect the disconnect button
     connect(ui->disconnectButton, &QPushButton::clicked, this, &MainWindow::onDisconnectButtonClicked);
 
-    // Connect the Send buttons in the tabs
+    // Connect the send buttons in the tabs
     connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::onSendMessageTab1Clicked);
     connect(ui->pushButton_2, &QPushButton::clicked, this, &MainWindow::onSendMessageTab2Clicked);
-
-    // Connect the checkbox state change
-    connect(ui->checkBox, &QCheckBox::stateChanged, this, &MainWindow::onCheckBoxStateChanged);
 }
 
 void MainWindow::onDisconnectButtonClicked()
 {
-    // Placeholder for disconnect functionality
+    // Retrieve the selected item in the client list
+    QListWidgetItem *selectedItem = ui->listWidget->currentItem();
+    if (selectedItem) {
+        // Extract the client identifier (e.g., the username)
+        QString clientIdentifier = selectedItem->text();
+
+        // Disconnect the client via the server
+        if (m_chatServer) {
+            QTcpSocket* clientSocket = m_chatServer->getSocketByName(clientIdentifier);
+            if (clientSocket) {
+                clientSocket->disconnectFromHost(); // Triggers handleDisconnection in ChatServer
+                qDebug() << "Client" << clientIdentifier << "disconnected successfully.";
+            } else {
+                qDebug() << "Client with identifier" << clientIdentifier << "not found on the server.";
+            }
+        }
+
+        // Remove the item from the client list
+        delete selectedItem;
+    }
 }
 
 void MainWindow::onSendMessageTab1Clicked()
 {
-    // Placeholder for sending a message in Tab 1
+    // Placeholder to send a message in Tab 1
+    qDebug() << "Send message button clicked in Tab 1.";
 }
 
 void MainWindow::onSendMessageTab2Clicked()
 {
-    // Placeholder for sending a message in Tab 2
-}
-
-void MainWindow::onCheckBoxStateChanged(int state)
-{
-    // Placeholder for handling checkbox state changes
+    // Placeholder to send a message in Tab 2
+    qDebug() << "Send message button clicked in Tab 2.";
 }
