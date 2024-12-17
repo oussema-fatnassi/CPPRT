@@ -40,37 +40,30 @@ void MainWindow::onDisconnectButtonClicked() {
         if (m_chatServer) {
             // Use the server's existing disconnection mechanism
             m_chatServer->disconnectClientByName(clientIdentifier);
-
-            // Do NOT manually delete the item here
-            // Let the server's disconnection handler update the UI
         }
     }
 }
 
-
-
-
 void MainWindow::onDisconnectAllButtonClicked()
 {
-    // Iterate through all items in the client list and disconnect each client
+    // Create a copy of the client list to avoid modifying the list while iterating
+    QList<QString> clientIdentifiers;
     for (int i = 0; i < ui->listWidget->count(); ++i) {
         QListWidgetItem *item = ui->listWidget->item(i);
         if (item) {
-            QString clientIdentifier = item->text();
-            if (m_chatServer) {
-                QTcpSocket* clientSocket = m_chatServer->getSocketByName(clientIdentifier);
-                if (clientSocket) {
-                    clientSocket->disconnectFromHost(); // Triggers handleDisconnection in ChatServer
-                    qDebug() << "Client" << clientIdentifier << "disconnected successfully.";
-                } else {
-                    qDebug() << "Client with identifier" << clientIdentifier << "not found on the server.";
-                }
-            }
+            clientIdentifiers.append(item->text());
         }
     }
 
-    // Clear the client list
-    ui->listWidget->clear();
+    // Disconnect each client
+    for (const QString& clientIdentifier : clientIdentifiers) {
+        if (m_chatServer) {
+            m_chatServer->disconnectClientByName(clientIdentifier);
+        }
+    }
+
+    // The client list will be updated via the clientListChanged signal
+    // Do not manually clear the list here
 }
 
 void MainWindow::onSendMessageTab1Clicked()
