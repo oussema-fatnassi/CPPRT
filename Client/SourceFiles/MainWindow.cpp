@@ -54,6 +54,10 @@ void MainWindow::onBtnSendClicked()
                                        .arg(QTime::currentTime().toString("hh:mm:ss"))
                                        .arg(message);
 
+    if (chatClient) {
+        chatClient->sendMessage(message);
+    }
+
     QStandardItem *item = new QStandardItem(messageWithTimestamp);
     listViewModel->appendRow(item);
 
