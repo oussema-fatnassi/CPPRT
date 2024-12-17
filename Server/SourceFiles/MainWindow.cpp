@@ -1,21 +1,13 @@
 #include "MainWindow.hpp"
 #include "./ui_MainWindow.h"
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(ChatServer* server, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , m_chatServer(nullptr) // Initialisation du pointeur du serveur
+    , m_chatServer(server)
 {
     ui->setupUi(this);
     setWindowTitle("Server");
-
-    // Initialize the chat server
-    m_chatServer = new ChatServer(this);
-    if (!m_chatServer->start(1234)) {
-        qDebug() << "Failed to start the chat server.";
-    } else {
-        qDebug() << "Chat server started successfully.";
-    }
 
     // Setup widget connections
     setupConnections();
@@ -30,6 +22,7 @@ void MainWindow::setupConnections()
 {
     // Connect the disconnect button
     connect(ui->disconnectButton, &QPushButton::clicked, this, &MainWindow::onDisconnectButtonClicked);
+    connect(ui->disconnectAllButton, &QPushButton::clicked, this, &MainWindow::onDisconnectAllButtonClicked);
 
     // Connect the send buttons in the tabs
     connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::onSendMessageTab1Clicked);
@@ -58,6 +51,29 @@ void MainWindow::onDisconnectButtonClicked()
         // Remove the item from the client list
         delete selectedItem;
     }
+}
+
+void MainWindow::onDisconnectAllButtonClicked()
+{
+    // Iterate through all items in the client list and disconnect each client
+    for (int i = 0; i < ui->listWidget->count(); ++i) {
+        QListWidgetItem *item = ui->listWidget->item(i);
+        if (item) {
+            QString clientIdentifier = item->text();
+            if (m_chatServer) {
+                QTcpSocket* clientSocket = m_chatServer->getSocketByName(clientIdentifier);
+                if (clientSocket) {
+                    clientSocket->disconnectFromHost(); // Triggers handleDisconnection in ChatServer
+                    qDebug() << "Client" << clientIdentifier << "disconnected successfully.";
+                } else {
+                    qDebug() << "Client with identifier" << clientIdentifier << "not found on the server.";
+                }
+            }
+        }
+    }
+
+    // Clear the client list
+    ui->listWidget->clear();
 }
 
 void MainWindow::onSendMessageTab1Clicked()
