@@ -28,6 +28,9 @@ MainWindow::~MainWindow()
 void MainWindow::setChatClient(ChatClient* client) {
     this->chatClient = client;
     qDebug() << "ChatClient passed to MainWindow!";
+
+    // Connect signal for message reception
+    connect(chatClient, &ChatClient::messageReceived, this, &MainWindow::onMessageReceived);
 }
 
 void MainWindow::setupMainWindowUI()
@@ -97,4 +100,17 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
         }
     }
     return QMainWindow::eventFilter(obj, event);
+}
+
+void MainWindow::onMessageReceived(const QString& message) {
+    // Format the message with a timestamp
+    QString messageWithTimestamp = QString("[%1] %2")
+                                       .arg(QTime::currentTime().toString("hh:mm:ss"))
+                                       .arg(message);
+
+    QStandardItem* item = new QStandardItem(messageWithTimestamp);
+    listViewModel->appendRow(item);
+
+    // Scroll to the bottom
+    ui->listView->scrollToBottom();
 }

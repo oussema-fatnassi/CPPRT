@@ -68,9 +68,10 @@ void ChatClient::handleReadyRead() {
     else if (message.startsWith("BROADCAST:")) {
         QString actualMessage = message.mid(10);
         if (actualMessage.startsWith(m_name + ":")) {
-            actualMessage.replace(0, m_name.length(), "You");
+            return; // Do not emit the signal for the sender's own message
         }
         qDebug() << "[Broadcast]" << actualMessage;
+        emit messageReceived(actualMessage);
     }
     else if (message.startsWith("DM:")) {
         QString dmMessage = message.mid(3);

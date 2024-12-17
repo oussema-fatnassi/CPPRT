@@ -25,5 +25,9 @@ private:
     QTcpSocket* m_tcpSocket;
     QString m_name;
     QStringList m_onlineUsers;
+
+signals:
+    void messageReceived(const QString& message);
+
 };
 #endif // CHAT_CLIENT_H
