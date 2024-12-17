@@ -26,14 +26,14 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(ChatServer* server, QWidget *parent = nullptr);
     ~MainWindow();
 
 private slots:
     void onDisconnectButtonClicked();
+    void onDisconnectAllButtonClicked();
     void onSendMessageTab1Clicked();
     void onSendMessageTab2Clicked();
-    void onCheckBoxStateChanged(int state);
 
 private:
     Ui::MainWindow *ui;
