@@ -32,7 +32,7 @@ void ChatServer::broadcastClientList() {
         usersList += names.join(",");
     }
 
-    // Send to all connected clients
+    // Send to ALL connected clients
     for (QTcpSocket* clientSocket : m_clients) {
         clientSocket->write(usersList.toUtf8());
     }
@@ -48,13 +48,20 @@ void ChatServer::handleReadyRead() {
 
     if (message.startsWith("NAME:")) {
         QString name = message.mid(5).trimmed();
+
+        // Check if the name is already in use
+        if (m_clientNames.values().contains(name)) {
+            // Send error message if name is taken
+            senderSocket->write("SYSTEM:Username already in use. Please choose another name.");
+            return;
+        }
+
         m_clientNames[senderSocket] = name; // Map the socket to the username
         qDebug() << "Client name set to" << name << "from" << senderSocket->peerAddress().toString();
-
-        emit clientListChanged(); // Notify the UI to update the list
-        broadcastClientList();    // Broadcast updated client list
+        emit clientListChanged();
+        // Broadcast the updated list to ALL connected clients
+        broadcastClientList();
     }
-
     else if (message.startsWith("WIZZ:")) {
         QString targetName = message.mid(5).trimmed();
         QTcpSocket *targetSocket = getSocketByName(targetName);
@@ -68,7 +75,6 @@ void ChatServer::handleReadyRead() {
             qDebug() << "Target user not found: " << targetName;
         }
     }
-
     else if (message.startsWith("DM:")) {
         int firstColon = message.indexOf(':');
         int secondColon = message.indexOf(':', firstColon + 1);

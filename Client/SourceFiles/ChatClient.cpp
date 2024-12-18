@@ -61,13 +61,19 @@ void ChatClient::handleReadyRead() {
     QString message = QString::fromUtf8(data);
 
     if (message.startsWith("USERS:")) {
-        // Update online users list
-        m_onlineUsers = message.mid(6).split(",", Qt::SkipEmptyParts);
+        // Extract the list of users
+        QString usersString = message.mid(6);
+        QStringList updatedUsers = usersString.split(",", Qt::SkipEmptyParts);
 
-        // Remove the current user's name
+        // Update the internal list of online users
+        m_onlineUsers = updatedUsers;
+
+        // Remove the current user from the list
         m_onlineUsers.removeAll(m_name);
 
-        qDebug() << "Online users:" << m_onlineUsers;
+        qDebug() << "Received user list:" << m_onlineUsers;
+
+        // Emit the signal with the updated list
         emit userListUpdated(m_onlineUsers);
     }
     else if (message == "WIZZ") {
@@ -88,9 +94,7 @@ void ChatClient::handleReadyRead() {
             dmMessage.replace(0, m_name.length(), "You");
         }
         qDebug() << "[Private]" << dmMessage;
-    }
-    else if (message.startsWith("SYSTEM:")) {
-        qDebug() << "[System]" << message.mid(7);
+        emit messageReceived(dmMessage);
     }
 }
 
@@ -104,5 +108,7 @@ bool ChatClient::isConnected() const {
 }
 
 QStringList ChatClient::getOnlineUsers() const {
-    return m_onlineUsers;
+    // Return a copy of the online users list, excluding the current user
+    QStringList users = m_onlineUsers;
+    return users;
 }

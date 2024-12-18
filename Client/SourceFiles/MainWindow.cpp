@@ -29,10 +29,16 @@ void MainWindow::setChatClient(ChatClient* client) {
     this->chatClient = client;
     qDebug() << "ChatClient passed to MainWindow!";
 
-    // Connect signal for message reception
+    // Connect signals BEFORE potentially triggering any updates
     connect(chatClient, &ChatClient::messageReceived, this, &MainWindow::onMessageReceived);
     connect(chatClient, &ChatClient::userListUpdated, this, &MainWindow::updateUserList);
     connect(chatClient, &ChatClient::wizzReceived, this, &MainWindow::triggerWizzEffect);
+
+    // Optional: Trigger an initial update if needed
+    if (!chatClient->getOnlineUsers().isEmpty()) {
+        updateUserList(chatClient->getOnlineUsers());
+    }
+
 }
 
 void MainWindow::setupMainWindowUI()
