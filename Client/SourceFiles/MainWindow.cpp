@@ -63,6 +63,63 @@ void MainWindow::setupUi()
     mainLayout->addLayout(bottomLayout);
     
     setCentralWidget(centralWidget);
+
+textBrowser->setStyleSheet(
+        "QTextBrowser {"
+        "   background-color: white;"
+        "   border: none;"
+        "   border-radius: 10px;"
+        "   padding: 10px;"
+        "   border: 1px solid rgb(10, 9, 9);"
+        "}"
+    );
+
+    // Style moderne pour la zone de saisie
+    textEdit->setStyleSheet(
+        "QTextEdit {"
+        "   border: 1px solid rgb(219, 203, 203);"
+        "   border-radius: 20px;"
+        "   padding: 10px;"
+        "   background-color: white;"
+        "   margin: 5px;"
+        "}"
+    );
+
+    // Style pour les boutons
+    QString buttonStyle = 
+        "QPushButton {"
+        "   background-color: #0084ff;"
+        "   color: white;"
+        "   border: none;"
+        "   border-radius: 15px;"
+        "   padding: 8px 15px;"
+        "   font-weight: bold;"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: #0073e6;"
+        "}";
+
+    buttonSend->setStyleSheet(buttonStyle);
+    buttonWizz->setStyleSheet(buttonStyle);
+
+    // Style pour la liste des utilisateurs
+    listClients->setStyleSheet(
+        "QListWidget {"
+        "   background-color: white;"
+        "   border: 1px solid rgb(10, 9, 9);"
+        "   border-radius: 10px;"
+        "   padding: 5px;"
+        "}"
+        "QListWidget::item {"
+        "   padding: 8px;"
+        "   border-radius: 5px;"
+        "}"
+        "QListWidget::item:selected {"
+        "   background-color:rgb(88, 120, 155);"
+        "   color: #0084ff;"
+        "}"
+    );
+
 }
 
 void MainWindow::setupEmojiButton()
@@ -180,27 +237,39 @@ void MainWindow::onBtnSendClicked()
 }
 
 QString MainWindow::formatMessage(const QString& message, bool isSentByMe) {
-    QString timeStamp = QTime::currentTime().toString("hh:mm:ss");
+    QString timeStamp = QTime::currentTime().toString("hh:mm");
     QString formattedMessage = replaceEmojis(message);
     
-    QString alignment = isSentByMe ? "right" : "left";
-    QString bgColor = isSentByMe ? "#dcf8c6" : "#e1ffc7";
-    
-    return QString("<div style='margin: 5px; text-align: %1;'>"
-                  "<span style='color: gray; font-size: 12px;'>[%2]</span><br/>"
-                  "<div style='background-color: %3; "
-                  "border-radius: 10px; "
-                  "padding: 8px; "
-                  "margin: 2px; "
-                  "display: inline-block; "
-                  "max-width: 80%;'>"
-                  "%4</div></div>")
-                  .arg(alignment)
-                  .arg(timeStamp)
-                  .arg(bgColor)
-                  .arg(formattedMessage);
-}
+    // Style moderne avec des bulles de message arrondies
+    QString style = QString(
+        "<div style='margin: 10px 20px; %1'>"
+        "<div style='display: inline-block; max-width: 70%%; %2'>"
+        "<div style='%3 padding: 12px; border-radius: 18px; position: relative;'>"
+        "<span style='font-size: 14px; color: #%4'>%5</span>"
+        "<div style='font-size: 11px; color: #999; margin-top: 5px; text-align: right'>%6</div>"
+        "</div>"
+        "</div>"
+        "</div>"
+    );
 
+    if (isSentByMe) {
+        return style
+            .arg("text-align: right")                            // Alignement à droite
+            .arg("margin-left: 30%")                            // Marge pour les messages envoyés
+            .arg("background-color: #0084ff; color: white")     // Bleu pour mes messages
+            .arg("000000")                                      // Texte blanc
+            .arg(formattedMessage)
+            .arg(timeStamp);
+    } else {
+        return style
+            .arg("text-align: left")                           // Alignement à gauche
+            .arg("margin-right: 30%")                          // Marge pour les messages reçus
+            .arg("background-color:rgb(95, 74, 74); color: black")    // Gris clair pour les autres
+            .arg("000000")                                     // Texte noir
+            .arg(formattedMessage)
+            .arg(timeStamp);
+    }
+}
 void MainWindow::onPushButtonWizzClicked()
 {
     WizzEffect *wizzEffect = new WizzEffect(this);
