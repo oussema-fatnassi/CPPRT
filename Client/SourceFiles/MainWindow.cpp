@@ -18,7 +18,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Set up connections
     setupMainWindowUI();
-    connect(chatClient, &ChatClient::wizzReceived, this, &MainWindow::triggerWizzEffect);
 }
 
 MainWindow::~MainWindow()
@@ -33,6 +32,7 @@ void MainWindow::setChatClient(ChatClient* client) {
     // Connect signal for message reception
     connect(chatClient, &ChatClient::messageReceived, this, &MainWindow::onMessageReceived);
     connect(chatClient, &ChatClient::userListUpdated, this, &MainWindow::updateUserList);
+    connect(chatClient, &ChatClient::wizzReceived, this, &MainWindow::triggerWizzEffect);
 }
 
 void MainWindow::setupMainWindowUI()
@@ -92,6 +92,7 @@ void MainWindow::onPushButtonWizzClicked()
 
         // Send the command to the server via ChatClient
         if (chatClient) {
+            qDebug() << "Sending WIZZ command to" << targetName;
             chatClient->sendMessage(wizzCommand);
         } else {
             qDebug() << "Chat client not initialized!";

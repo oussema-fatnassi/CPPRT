@@ -71,7 +71,8 @@ void ChatClient::handleReadyRead() {
         emit userListUpdated(m_onlineUsers);
     }
     else if (message == "WIZZ") {
-        emit wizzReceived(); // Émet un signal pour wizz la fenêtre
+        qDebug() << "Received WIZZ command";
+        emit wizzReceived();
     }
     else if (message.startsWith("BROADCAST:")) {
         QString actualMessage = message.mid(10);
