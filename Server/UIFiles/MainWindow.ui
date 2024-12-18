@@ -64,34 +64,6 @@
        <height>401</height>
       </rect>
      </property>
-     <item>
-      <property name="text">
-       <string>Test 1</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Test 2</string>
-      </property>
-      <property name="textAlignment">
-       <set>AlignTrailing|AlignVCenter</set>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>????</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Nouvel élément</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Test 5</string>
-      </property>
-     </item>
     </widget>
     <widget class="QPushButton" name="disconnectButton">
      <property name="geometry">
@@ -194,75 +166,6 @@
        </layout>
       </widget>
      </widget>
-     <widget class="QWidget" name="Client2">
-      <attribute name="title">
-       <string>Tab 2</string>
-      </attribute>
-      <widget class="QListWidget" name="listWidget_3">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>681</width>
-         <height>351</height>
-        </rect>
-       </property>
-       <item>
-        <property name="text">
-         <string>Salut !</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string/>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Salut toi !</string>
-        </property>
-        <property name="textAlignment">
-         <set>AlignTrailing|AlignVCenter</set>
-        </property>
-       </item>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_2">
-       <property name="geometry">
-        <rect>
-         <x>82</x>
-         <y>381</y>
-         <width>496</width>
-         <height>26</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLabel" name="messageLabel_2">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>380</y>
-         <width>65</width>
-         <height>29</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Message :</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="pushButton_2">
-       <property name="geometry">
-        <rect>
-         <x>585</x>
-         <y>380</y>
-         <width>104</width>
-         <height>29</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Send message</string>
-       </property>
-      </widget>
-     </widget>
     </widget>
    </widget>
   </widget>
@@ -272,7 +175,7 @@
      <x>0</x>
      <y>0</y>
      <width>1152</width>
-     <height>24</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>
