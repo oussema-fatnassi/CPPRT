@@ -15,6 +15,7 @@ public:
     void sendDirectMessage(const QString& targetName, const QString& message);
     bool isConnected() const;
     QStringList getOnlineUsers() const;
+    QString getName() const { return m_name; }
 
 private slots:
     void handleConnected();
@@ -30,6 +31,7 @@ signals:
     void messageReceived(const QString& message);
     void userListUpdated(const QStringList& users);
     void nameRejected(const QString& reason);
+    void privateMessageReceived(const QString& sender, const QString& recipient, const QString& message);
 
 };
 #endif // CHAT_CLIENT_H

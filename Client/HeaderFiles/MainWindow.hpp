@@ -34,11 +34,13 @@ public:
     ~MainWindow();
     void setChatClient(ChatClient* client);
     void onUserDoubleClicked(QListWidgetItem* item);
+    void onGeneralMessageReceived(const QString& message);
+    void onPrivateMessageReceived(const QString& senderName, const QString& recipient, const QString& dmContent);
 
 private slots:
     void onBtnSendClicked();
     void onPushButtonWizzClicked();
-    void onMessageReceived(const QString& message);
+    // void onMessageReceived(const QString& message);
     void updateUserList(const QStringList& users);
 
 private:

@@ -86,11 +86,18 @@ void ChatClient::handleReadyRead() {
     }
     else if (message.startsWith("DM:")) {
         QString dmMessage = message.mid(3);
-        if (dmMessage.startsWith(m_name + ":")) {
-            dmMessage.replace(0, m_name.length(), "You");
+        QString senderName = dmMessage.section(":", 0, 0);
+        QString recipient = dmMessage.section(":", 1, 1);
+        QString content = dmMessage.section(":", 2);
+
+        // Ensure the message is meant for this user or sent by this user
+        if (recipient == m_name || senderName == m_name) {
+            if (dmMessage.startsWith(m_name + ":")) {
+                dmMessage.replace(0, m_name.length(), "You");
+            }
+            qDebug() << "[Private]" << dmMessage;
+            emit privateMessageReceived(senderName, recipient, content);
         }
-        qDebug() << "[Private]" << dmMessage;
-        emit messageReceived(dmMessage);
     }
 }
 
