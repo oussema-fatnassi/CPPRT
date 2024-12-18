@@ -33,7 +33,7 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void setChatClient(ChatClient* client);
-    void onClientDoubleClicked(QListWidgetItem* item);
+    void onUserDoubleClicked(QListWidgetItem* item);
 
 private slots:
     void onBtnSendClicked();

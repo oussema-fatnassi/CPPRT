@@ -44,9 +44,48 @@ void MainWindow::setupMainWindowUI()
     // Connect buttons to their respective slots
     connect(ui->buttonSend, &QPushButton::clicked, this, &MainWindow::onBtnSendClicked);
     connect(ui->buttonWizz, &QPushButton::clicked, this, &MainWindow::onPushButtonWizzClicked);
+    connect(ui->listClients, &QListWidget::itemDoubleClicked, this, &MainWindow::onUserDoubleClicked);
 
     ui->textEdit->installEventFilter(this);
 }
+
+void MainWindow::onUserDoubleClicked(QListWidgetItem* item) {
+    // Get the user's name from the clicked item
+    QString username = item->text();
+
+    // Check if a tab with this username already exists
+    for (int i = 0; i < ui->tabWidget->count(); ++i) {
+        if (ui->tabWidget->tabText(i) == username) {
+            ui->tabWidget->setCurrentIndex(i); // Focus the existing tab
+            return;
+        }
+    }
+
+    // Create a new tab
+    QWidget* newTab = new QWidget(this);
+
+    // Add a QListView to the tab
+    QListView* listView = new QListView(newTab);
+    listView->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    listView->setWrapping(false);
+    listView->setWordWrap(true);
+
+    // Set the same size policy as the General Channel's QListView
+    listView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    // Set the layout for the new tab
+    QVBoxLayout* layout = new QVBoxLayout(newTab);
+    layout->setContentsMargins(0, 0, 0, 0); // Match the margins in the UI file
+    layout->addWidget(listView);
+    newTab->setLayout(layout);
+
+    // Add the tab to the tab widget with the user's name as the title
+    ui->tabWidget->addTab(newTab, username);
+    ui->tabWidget->setCurrentWidget(newTab);
+}
+
+
 
 void MainWindow::updateUserList(const QStringList& users) {
     // Clear the list widget and repopulate with filtered users
@@ -81,23 +120,7 @@ void MainWindow::onBtnSendClicked()
 
         QStandardItem *item = new QStandardItem(messageWithTimestamp);
         listViewModel->appendRow(item);
-    } else {
-        // Handle Direct Message
-        if (m_clientModels.contains(currentTab)) {
-            QStringListModel *model = m_clientModels[currentTab];
-            QStringList messages = model->stringList();
-            QString messageWithTimestamp = QString("You [%1]: %2")
-                                               .arg(QTime::currentTime().toString("hh:mm:ss"))
-                                               .arg(message);
-            messages.append(messageWithTimestamp);
-            model->setStringList(messages);
-
-            if (chatClient) {
-                chatClient->sendDirectMessage(currentTab, message); // Send DM to the recipient
-            }
-        }
     }
-
 
     // Clear the input field
     ui->textEdit->clear();
@@ -149,27 +172,4 @@ void MainWindow::onMessageReceived(const QString& message) {
     // Scroll to the bottom
     ui->listView->scrollToBottom();
     ui->listView->setWordWrap(true);
-}
-
-void MainWindow::onClientDoubleClicked(QListWidgetItem* item) {
-    QString clientName = item->text();
-
-    // Check if the tab already exists
-    for (int i = 0; i < ui->tabWidget->count(); ++i) {
-        if (ui->tabWidget->tabText(i) == clientName) {
-            ui->tabWidget->setCurrentIndex(i); // Switch to existing tab
-            return;
-        }
-    }
-
-    // Create a new tab with a QListView
-    QListView* messageListView = new QListView();
-    QStringListModel* model = new QStringListModel();
-    messageListView->setModel(model);
-
-    ui->tabWidget->addTab(messageListView, clientName);
-    ui->tabWidget->setCurrentWidget(messageListView);
-
-    // Store the model reference for message updates
-    m_clientModels[clientName] = model;
 }
