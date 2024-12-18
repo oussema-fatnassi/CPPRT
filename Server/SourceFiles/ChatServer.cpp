@@ -65,7 +65,7 @@ void ChatServer::handleReadyRead() {
             qDebug() << "Sent WIZZ command to" << targetName;
         } else {
             senderSocket->write(QString("SYSTEM:User '%1' not found").arg(targetName).toUtf8());
-            qDebug() << "Target user not found:" << targetName;
+            qDebug() << "Target user not found: " << targetName;
         }
     }
 
