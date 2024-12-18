@@ -29,6 +29,7 @@ private:
 signals:
     void messageReceived(const QString& message);
     void userListUpdated(const QStringList& users);
+    void nameRejected(const QString& reason);
 
 };
 #endif // CHAT_CLIENT_H
