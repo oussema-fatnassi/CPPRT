@@ -2,26 +2,16 @@
 #define MAINWINDOW_HPP
 
 #include <QMainWindow>
-#include <QFrame>
+#include <QTextBrowser>
 #include <QListWidget>
-#include <QLabel>
-#include <QWidget>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QLineEdit>
+#include <QTextEdit>
 #include <QPushButton>
-#include <QMenuBar>
-#include <QStatusBar>
-#include <QStandardItemModel>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QMenu>
 #include <QKeyEvent>
+#include <QScrollBar>
 #include "ChatClient.hpp"
-
-
-QT_BEGIN_NAMESPACE
-namespace Ui {
-class MainWindow;
-}
-QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
 {
@@ -37,14 +27,26 @@ private slots:
     void onPushButtonWizzClicked();
     void onMessageReceived(const QString& message);
     void updateUserList(const QStringList& users);
+    void handleServerDisconnection();
 
 private:
-    void setupMainWindowUI();
-    ChatClient *chatClient;
+    void setupUi();
+    void setupEmojiButton();
+    void setupConnections();
+    void addEmojiToMessage(const QString& emoji);
+    QString formatMessage(const QString& message, bool isSentByMe);
+    QString replaceEmojis(QString message);
+    
+    ChatClient* chatClient;
+    QTextBrowser* textBrowser;
+    QListWidget* listClients;
+    QTextEdit* textEdit;
+    QPushButton* buttonSend;
+    QPushButton* buttonWizz;
+    QPushButton* emojiButton;
+    QMenu* emojiMenu;
 
-    Ui::MainWindow *ui;
-    QStandardItemModel *listViewModel;
-    bool eventFilter(QObject *obj, QEvent *event);
+    bool eventFilter(QObject *obj, QEvent *event) override;
 };
 
 #endif // MAINWINDOW_HPP
