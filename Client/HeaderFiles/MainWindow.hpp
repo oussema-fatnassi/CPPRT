@@ -40,7 +40,7 @@ public:
 private slots:
     void onBtnSendClicked();
     void onPushButtonWizzClicked();
-    // void onMessageReceived(const QString& message);
+    void triggerWizzEffect();
     void updateUserList(const QStringList& users);
 
 private:
