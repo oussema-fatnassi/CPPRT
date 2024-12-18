@@ -63,7 +63,12 @@ void ChatClient::handleReadyRead() {
     if (message.startsWith("USERS:")) {
         // Update online users list
         m_onlineUsers = message.mid(6).split(",", Qt::SkipEmptyParts);
+
+        // Remove the current user's name
+        m_onlineUsers.removeAll(m_name);
+
         qDebug() << "Online users:" << m_onlineUsers;
+        emit userListUpdated(m_onlineUsers);
     }
     else if (message.startsWith("BROADCAST:")) {
         QString actualMessage = message.mid(10);

@@ -28,6 +28,7 @@ private:
 
 signals:
     void messageReceived(const QString& message);
+    void userListUpdated(const QStringList& users);
 
 };
 #endif // CHAT_CLIENT_H
