@@ -63,14 +63,20 @@ void ChatClient::handleReadyRead() {
     if (message.startsWith("USERS:")) {
         // Update online users list
         m_onlineUsers = message.mid(6).split(",", Qt::SkipEmptyParts);
+
+        // Remove the current user's name
+        m_onlineUsers.removeAll(m_name);
+
         qDebug() << "Online users:" << m_onlineUsers;
+        emit userListUpdated(m_onlineUsers);
     }
     else if (message.startsWith("BROADCAST:")) {
         QString actualMessage = message.mid(10);
         if (actualMessage.startsWith(m_name + ":")) {
-            actualMessage.replace(0, m_name.length(), "You");
+            return; // Do not emit the signal for the sender's own message
         }
         qDebug() << "[Broadcast]" << actualMessage;
+        emit messageReceived(actualMessage);
     }
     else if (message.startsWith("DM:")) {
         QString dmMessage = message.mid(3);

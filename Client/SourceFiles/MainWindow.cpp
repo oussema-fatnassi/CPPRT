@@ -28,6 +28,10 @@ MainWindow::~MainWindow()
 void MainWindow::setChatClient(ChatClient* client) {
     this->chatClient = client;
     qDebug() << "ChatClient passed to MainWindow!";
+
+    // Connect signal for message reception
+    connect(chatClient, &ChatClient::messageReceived, this, &MainWindow::onMessageReceived);
+    connect(chatClient, &ChatClient::userListUpdated, this, &MainWindow::updateUserList);
 }
 
 void MainWindow::setupMainWindowUI()
@@ -37,6 +41,14 @@ void MainWindow::setupMainWindowUI()
     connect(ui->buttonWizz, &QPushButton::clicked, this, &MainWindow::onPushButtonWizzClicked);
 
     ui->textEdit->installEventFilter(this);
+}
+
+void MainWindow::updateUserList(const QStringList& users) {
+    // Clear the list widget and repopulate with filtered users
+    ui->listClients->clear();
+    for (const QString& user : users) {
+        ui->listClients->addItem(user);
+    }
 }
 
 void MainWindow::onBtnSendClicked()
@@ -97,4 +109,17 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
         }
     }
     return QMainWindow::eventFilter(obj, event);
+}
+
+void MainWindow::onMessageReceived(const QString& message) {
+    // Format the message with a timestamp
+    QString messageWithTimestamp = QString("[%1] %2")
+                                       .arg(QTime::currentTime().toString("hh:mm:ss"))
+                                       .arg(message);
+
+    QStandardItem* item = new QStandardItem(messageWithTimestamp);
+    listViewModel->appendRow(item);
+
+    // Scroll to the bottom
+    ui->listView->scrollToBottom();
 }

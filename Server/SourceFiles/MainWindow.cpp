@@ -61,9 +61,6 @@ void MainWindow::onDisconnectAllButtonClicked()
             m_chatServer->disconnectClientByName(clientIdentifier);
         }
     }
-
-    // The client list will be updated via the clientListChanged signal
-    // Do not manually clear the list here
 }
 
 void MainWindow::onSendMessageTab1Clicked()
