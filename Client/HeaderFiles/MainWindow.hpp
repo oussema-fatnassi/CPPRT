@@ -14,6 +14,8 @@
 #include <QStatusBar>
 #include <QStandardItemModel>
 #include <QKeyEvent>
+#include <QListView>
+#include <QStringListModel>
 #include "ChatClient.hpp"
 
 
@@ -31,12 +33,14 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void setChatClient(ChatClient* client);
+    void onUserDoubleClicked(QListWidgetItem* item);
+    void onGeneralMessageReceived(const QString& message);
+    void onPrivateMessageReceived(const QString& senderName, const QString& recipient, const QString& dmContent);
 
 private slots:
     void onBtnSendClicked();
     void onPushButtonWizzClicked();
     void triggerWizzEffect();
-    void onMessageReceived(const QString& message);
     void updateUserList(const QStringList& users);
 
 private:

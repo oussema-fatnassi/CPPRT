@@ -99,12 +99,12 @@ void ChatServer::broadcastMessage(const QString& message, QTcpSocket* sender) {
     qDebug() << "Broadcast message from" << senderName << ":" << message;
 }
 
-void ChatServer::sendDirectMessage(const QString& message, const QString& targetName, QTcpSocket* sender) {
+void ChatServer::sendDirectMessage(const QString &message, const QString &targetName, QTcpSocket *sender) {
     QString senderName = m_clientNames.value(sender, "Unknown");
-    QTcpSocket* targetSocket = getSocketByName(targetName);
+    QTcpSocket *targetSocket = getSocketByName(targetName);
 
     if (targetSocket) {
-        QString dmMessage = "DM:" + senderName + ": " + message;
+        QString dmMessage = "DM:" + senderName + ":" + targetName + ":" + message;
         targetSocket->write(dmMessage.toUtf8());
         sender->write(dmMessage.toUtf8());
         qDebug() << "DM from" << senderName << "to" << targetName << ":" << message;
@@ -112,6 +112,7 @@ void ChatServer::sendDirectMessage(const QString& message, const QString& target
         sender->write(QString("SYSTEM:User '%1' not found").arg(targetName).toUtf8());
     }
 }
+
 
 QTcpSocket* ChatServer::getSocketByName(const QString& name) {
     for (auto it = m_clientNames.begin(); it != m_clientNames.end(); ++it) {
