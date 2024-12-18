@@ -37,6 +37,7 @@ private slots:
     void onPushButtonWizzClicked();
     void onMessageReceived(const QString& message);
     void updateUserList(const QStringList& users);
+    void handleServerDisconnection();
 
 private:
     void setupMainWindowUI();
