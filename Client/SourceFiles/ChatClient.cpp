@@ -97,6 +97,7 @@ void ChatClient::handleReadyRead() {
 void ChatClient::handleDisconnected() {
     qDebug() << "Disconnected from server";
     m_onlineUsers.clear();
+    emit disconnected();
 }
 
 bool ChatClient::isConnected() const {
