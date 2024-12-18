@@ -103,6 +103,7 @@ void MainWindow::onPushButtonWizzClicked()
 
 void MainWindow::triggerWizzEffect()
 {
+    qDebug() << "Wizz effect triggered!";
     WizzEffect *wizzEffect = new WizzEffect(this);
     wizzEffect->start();
 }
