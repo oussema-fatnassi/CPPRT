@@ -122,4 +122,5 @@ void MainWindow::onMessageReceived(const QString& message) {
 
     // Scroll to the bottom
     ui->listView->scrollToBottom();
+    ui->listView->setWordWrap(true);
 }
