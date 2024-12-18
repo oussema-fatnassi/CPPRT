@@ -148,6 +148,7 @@ void MainWindow::onBtnSendClicked()
                 listView->setModel(model);
             }
             QStandardItem *item = new QStandardItem(messageWithTimestamp);
+            item->setData(true, Qt::UserRole);
             model->appendRow(item);
         }
     }
@@ -343,9 +344,16 @@ void MainWindow::onPrivateMessageReceived(const QString &senderName, const QStri
             // Format the message
             QString timestampedMessage;
             if (senderName == chatClient->getName()) {
+                // Ignore messages already displayed locally
+                for (int i = 0; i < model->rowCount(); ++i) {
+                    QStandardItem *existingItem = model->item(i);
+                    if (existingItem->data(Qt::UserRole).toBool() && existingItem->text().contains(dmContent)) {
+                        return;
+                    }
+                }
                 timestampedMessage = QString("[%1] You: %2")
-                .arg(QTime::currentTime().toString("hh:mm:ss"))
-                    .arg(dmContent);
+                                         .arg(QTime::currentTime().toString("hh:mm:ss"))
+                                         .arg(dmContent);
             } else {
                 timestampedMessage = QString("[%1] %2: %3")
                 .arg(QTime::currentTime().toString("hh:mm:ss"))
@@ -354,6 +362,7 @@ void MainWindow::onPrivateMessageReceived(const QString &senderName, const QStri
             }
 
             QStandardItem *item = new QStandardItem(timestampedMessage);
+            item->setData(false, Qt::UserRole); // Not locally added
             model->appendRow(item);
 
             // Scroll to the bottom
