@@ -95,27 +95,51 @@
         </rect>
        </property>
       </widget>
-      <widget class="QListView" name="listView">
+      <widget class="QTabWidget" name="tabWidget">
        <property name="geometry">
         <rect>
-         <x>40</x>
-         <y>50</y>
-         <width>781</width>
-         <height>381</height>
+         <x>20</x>
+         <y>30</y>
+         <width>801</width>
+         <height>401</height>
         </rect>
        </property>
-       <property name="horizontalScrollBarPolicy">
-        <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+       <property name="tabPosition">
+        <enum>QTabWidget::TabPosition::North</enum>
        </property>
-       <property name="editTriggers">
-        <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+       <property name="tabShape">
+        <enum>QTabWidget::TabShape::Rounded</enum>
        </property>
-       <property name="isWrapping" stdset="0">
-        <bool>false</bool>
+       <property name="currentIndex">
+        <number>0</number>
        </property>
-       <property name="wordWrap">
-        <bool>false</bool>
-       </property>
+       <widget class="QWidget" name="tab">
+        <attribute name="title">
+         <string>General Channel</string>
+        </attribute>
+        <widget class="QListView" name="listView">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>781</width>
+           <height>381</height>
+          </rect>
+         </property>
+         <property name="horizontalScrollBarPolicy">
+          <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+         </property>
+         <property name="editTriggers">
+          <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+         </property>
+         <property name="isWrapping" stdset="0">
+          <bool>false</bool>
+         </property>
+         <property name="wordWrap">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </widget>
       </widget>
      </widget>
     </item>
@@ -127,7 +151,7 @@
      <x>0</x>
      <y>0</y>
      <width>1068</width>
-     <height>26</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>
