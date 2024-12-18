@@ -3,6 +3,7 @@
 #include "WizzEffect.hpp"
 #include <QStandardItemModel>
 #include <QTime>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -29,9 +30,10 @@ void MainWindow::setChatClient(ChatClient* client) {
     this->chatClient = client;
     qDebug() << "ChatClient passed to MainWindow!";
 
-    // Connect signal for message reception
+    // Connect signals for message reception, user list updates and disconnection
     connect(chatClient, &ChatClient::messageReceived, this, &MainWindow::onMessageReceived);
     connect(chatClient, &ChatClient::userListUpdated, this, &MainWindow::updateUserList);
+    connect(chatClient, &ChatClient::disconnected, this, &MainWindow::handleServerDisconnection);
 }
 
 void MainWindow::setupMainWindowUI()
@@ -122,4 +124,33 @@ void MainWindow::onMessageReceived(const QString& message) {
 
     // Scroll to the bottom
     ui->listView->scrollToBottom();
+}
+
+void MainWindow::handleServerDisconnection()
+{
+    // Create and configure the disconnection message box
+    QMessageBox* msgBox = new QMessageBox(this);
+    msgBox->setWindowTitle("Disconnection");
+    msgBox->setText("You have been disconnected.");
+    msgBox->setIcon(QMessageBox::Warning);
+    msgBox->setStandardButtons(QMessageBox::Ok);
+
+    // Connect the OK button to close the window
+    connect(msgBox, &QMessageBox::finished, this, [this]() {
+        // Cleanup before closing
+        if (chatClient) {
+            chatClient->deleteLater();
+            chatClient = nullptr;
+        }
+        // Close the main window
+        this->close();
+    });
+
+    // Show the message box
+    msgBox->show();
+    
+    // Disable UI controls
+    ui->buttonSend->setEnabled(false);
+    ui->buttonWizz->setEnabled(false);
+    ui->textEdit->setEnabled(false);
 }
