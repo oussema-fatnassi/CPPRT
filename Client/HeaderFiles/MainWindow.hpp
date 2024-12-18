@@ -14,6 +14,8 @@
 #include <QStatusBar>
 #include <QStandardItemModel>
 #include <QKeyEvent>
+#include <QListView>
+#include <QStringListModel>
 #include "ChatClient.hpp"
 
 
@@ -31,6 +33,7 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void setChatClient(ChatClient* client);
+    void onClientDoubleClicked(QListWidgetItem* item);
 
 private slots:
     void onBtnSendClicked();

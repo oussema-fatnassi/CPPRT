@@ -66,17 +66,38 @@ void MainWindow::onBtnSendClicked()
         return;
     }
 
-    // Add the message to the list view with a timestamp
-    QString messageWithTimestamp = QString("[%1] %2")
-                                       .arg(QTime::currentTime().toString("hh:mm:ss"))
-                                       .arg(message);
+    // Get the current tab's name
+    QString currentTab = ui->tabWidget->tabText(ui->tabWidget->currentIndex());
 
-    if (chatClient) {
-        chatClient->sendMessage(message);
+    if(currentTab == "General Channel") {
+        // Add the message to the list view with a timestamp
+        QString messageWithTimestamp = QString("[%1] %2")
+                                           .arg(QTime::currentTime().toString("hh:mm:ss"))
+                                           .arg(message);
+
+        if (chatClient) {
+            chatClient->sendMessage(message);
+        }
+
+        QStandardItem *item = new QStandardItem(messageWithTimestamp);
+        listViewModel->appendRow(item);
+    } else {
+        // Handle Direct Message
+        if (m_clientModels.contains(currentTab)) {
+            QStringListModel *model = m_clientModels[currentTab];
+            QStringList messages = model->stringList();
+            QString messageWithTimestamp = QString("You [%1]: %2")
+                                               .arg(QTime::currentTime().toString("hh:mm:ss"))
+                                               .arg(message);
+            messages.append(messageWithTimestamp);
+            model->setStringList(messages);
+
+            if (chatClient) {
+                chatClient->sendDirectMessage(currentTab, message); // Send DM to the recipient
+            }
+        }
     }
 
-    QStandardItem *item = new QStandardItem(messageWithTimestamp);
-    listViewModel->appendRow(item);
 
     // Clear the input field
     ui->textEdit->clear();
@@ -127,4 +148,27 @@ void MainWindow::onMessageReceived(const QString& message) {
 
     // Scroll to the bottom
     ui->listView->scrollToBottom();
+}
+
+void MainWindow::onClientDoubleClicked(QListWidgetItem* item) {
+    QString clientName = item->text();
+
+    // Check if the tab already exists
+    for (int i = 0; i < ui->tabWidget->count(); ++i) {
+        if (ui->tabWidget->tabText(i) == clientName) {
+            ui->tabWidget->setCurrentIndex(i); // Switch to existing tab
+            return;
+        }
+    }
+
+    // Create a new tab with a QListView
+    QListView* messageListView = new QListView();
+    QStringListModel* model = new QStringListModel();
+    messageListView->setModel(model);
+
+    ui->tabWidget->addTab(messageListView, clientName);
+    ui->tabWidget->setCurrentWidget(messageListView);
+
+    // Store the model reference for message updates
+    m_clientModels[clientName] = model;
 }
