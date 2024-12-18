@@ -29,6 +29,7 @@ private:
 signals:
     void messageReceived(const QString& message);
     void userListUpdated(const QStringList& users);
+    void disconnected();
 
 };
 #endif // CHAT_CLIENT_H
