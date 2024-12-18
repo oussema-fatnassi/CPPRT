@@ -8,6 +8,10 @@ class QTcpSocket;
 
 class ChatClient : public QObject {
     Q_OBJECT
+
+signals:
+    void wizzReceived();
+    
 public:
     ChatClient(const QString &name, QObject* parent = nullptr);
     bool connectToServer(const QHostAddress& host, quint16 port);
