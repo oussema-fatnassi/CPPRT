@@ -1,10 +1,10 @@
 #ifndef CHAT_CLIENT_H
 #define CHAT_CLIENT_H
+
 #include <QObject>
+#include <QTcpSocket>
 #include <QHostAddress>
 #include <QStringList>
-
-class QTcpSocket;
 
 class ChatClient : public QObject {
     Q_OBJECT
@@ -16,6 +16,11 @@ public:
     bool isConnected() const;
     QStringList getOnlineUsers() const;
 
+signals:
+    void messageReceived(const QString& message);
+    void userListUpdated(const QStringList& users);
+    void disconnected();  // Signal emitted when the client disconnects
+
 private slots:
     void handleConnected();
     void handleReadyRead();
@@ -25,11 +30,6 @@ private:
     QTcpSocket* m_tcpSocket;
     QString m_name;
     QStringList m_onlineUsers;
-
-signals:
-    void messageReceived(const QString& message);
-    void userListUpdated(const QStringList& users);
-    void nameRejected(const QString& reason);
-
 };
+
 #endif // CHAT_CLIENT_H
