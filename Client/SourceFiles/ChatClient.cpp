@@ -70,6 +70,9 @@ void ChatClient::handleReadyRead() {
         qDebug() << "Online users:" << m_onlineUsers;
         emit userListUpdated(m_onlineUsers);
     }
+    else if (message == "WIZZ") {
+        emit wizzReceived(); // Émet un signal pour wizz la fenêtre
+    }
     else if (message.startsWith("BROADCAST:")) {
         QString actualMessage = message.mid(10);
         if (actualMessage.startsWith(m_name + ":")) {

@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Set up connections
     setupMainWindowUI();
+    connect(chatClient, &ChatClient::wizzReceived, this, &MainWindow::triggerWizzEffect);
 }
 
 MainWindow::~MainWindow()
@@ -83,7 +84,25 @@ void MainWindow::onBtnSendClicked()
 
 void MainWindow::onPushButtonWizzClicked()
 {
-    // Trigger the WizzEffect on the main window
+    // Retrieve the selected user
+    QList<QListWidgetItem *> selectedItems = ui->listClients->selectedItems();
+    if (!selectedItems.isEmpty()) {
+        QString targetName = selectedItems.first()->text();
+        QString wizzCommand = "WIZZ:" + targetName;
+
+        // Send the command to the server via ChatClient
+        if (chatClient) {
+            chatClient->sendMessage(wizzCommand);
+        } else {
+            qDebug() << "Chat client not initialized!";
+        }
+    } else {
+        qDebug() << "No user selected!";
+    }
+}
+
+void MainWindow::triggerWizzEffect()
+{
     WizzEffect *wizzEffect = new WizzEffect(this);
     wizzEffect->start();
 }

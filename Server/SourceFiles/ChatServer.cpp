@@ -55,6 +55,20 @@ void ChatServer::handleReadyRead() {
         broadcastClientList();    // Broadcast updated client list
     }
 
+    else if (message.startsWith("WIZZ:")) {
+        QString targetName = message.mid(5).trimmed();
+        QTcpSocket *targetSocket = getSocketByName(targetName);
+
+        if (targetSocket) {
+            QString wizzMessage = "WIZZ";
+            targetSocket->write(wizzMessage.toUtf8());
+            qDebug() << "Sent WIZZ command to" << targetName;
+        } else {
+            senderSocket->write(QString("SYSTEM:User '%1' not found").arg(targetName).toUtf8());
+            qDebug() << "Target user not found:" << targetName;
+        }
+    }
+
     else if (message.startsWith("DM:")) {
         int firstColon = message.indexOf(':');
         int secondColon = message.indexOf(':', firstColon + 1);
