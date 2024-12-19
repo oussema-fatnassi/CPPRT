@@ -2,16 +2,22 @@
 #define MAINWINDOW_HPP
 
 #include <QMainWindow>
-#include <QTextBrowser>
+#include <QFrame>
 #include <QListWidget>
-#include <QTextEdit>
-#include <QPushButton>
-#include <QVBoxLayout>
+#include <QLabel>
+#include <QWidget>
 #include <QHBoxLayout>
-#include <QMenu>
+#include <QVBoxLayout>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QMenuBar>
+#include <QStatusBar>
+#include <QTextBrowser>
+#include <QTextEdit>
 #include <QKeyEvent>
-#include <QScrollBar>
+#include <QMenu>
 #include "ChatClient.hpp"
+#include "UIManager.hpp"
 
 class MainWindow : public QMainWindow
 {
@@ -28,15 +34,14 @@ private slots:
     void onMessageReceived(const QString& message);
     void updateUserList(const QStringList& users);
     void handleServerDisconnection();
+    void onWizzReceived(const QString& sender);
 
 private:
     void setupUi();
-    void setupEmojiButton();
     void setupConnections();
+    void setupEmojiButton();
     void addEmojiToMessage(const QString& emoji);
-    QString formatMessage(const QString& message, bool isSentByMe);
-    QString replaceEmojis(QString message);
-    
+
     ChatClient* chatClient;
     QTextBrowser* textBrowser;
     QListWidget* listClients;
