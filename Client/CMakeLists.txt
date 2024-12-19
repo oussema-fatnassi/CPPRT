@@ -27,7 +27,10 @@ set(CMAKE_AUTOUIC_SEARCH_PATHS "${UI_DIR}")
 file(GLOB_RECURSE PROJECT_SOURCES "${SOURCE_DIR}/*.cpp")
 file(GLOB_RECURSE PROJECT_HEADERS "${HEADER_DIR}/*.hpp")
 file(GLOB_RECURSE PROJECT_UIS "${UI_DIR}/*.ui")
-
+set(PROJECT_SOURCE_LIST
+    "${SOURCE_DIR}/UIManager.cpp"
+    "${HEADER_DIR}/UIManager.hpp"
+)
 # Add executable target with the appropriate sources
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Client
@@ -35,6 +38,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         ${PROJECT_HEADERS}
         ${PROJECT_UIS}
+        ${PROJECT_SOURCE_LIST} 
     )
 else()
     add_executable(Client
