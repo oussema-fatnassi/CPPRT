@@ -60,6 +60,12 @@ void ChatClient::handleReadyRead() {
     QByteArray data = m_tcpSocket->readAll();
     QString message = QString::fromUtf8(data);
 
+    if (message.startsWith("WIZZ:")) {
+        QString senderName = message.mid(5);
+        qDebug() << "Received WIZZ from:" << senderName;
+        emit wizzReceived(senderName);
+        return;
+    }
     if (message.startsWith("USERS:")) {
         // Extract the list of users
         QString usersString = message.mid(6);
@@ -108,4 +114,10 @@ QStringList ChatClient::getOnlineUsers() const {
     // Return a copy of the online users list, excluding the current user
     QStringList users = m_onlineUsers;
     return users;
+}
+void ChatClient::sendWizz(const QString& targetName) {
+    if (m_tcpSocket->state() == QTcpSocket::ConnectedState) {
+        QString wizzMessage = "WIZZ:" + targetName;
+        m_tcpSocket->write(wizzMessage.toUtf8());
+    }
 }
