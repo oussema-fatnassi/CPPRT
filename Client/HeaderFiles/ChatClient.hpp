@@ -15,12 +15,14 @@ public:
     void sendDirectMessage(const QString& targetName, const QString& message);
     bool isConnected() const;
     QStringList getOnlineUsers() const;
+    void sendWizz(const QString& targetName);
+    QString getName() const { return m_name; }
 
 signals:
     void messageReceived(const QString& message);
     void userListUpdated(const QStringList& users);
     void disconnected();  // Signal emitted when the client disconnects
-
+    void wizzReceived(const QString& sender); // Signal emitted when a wizz is received
 private slots:
     void handleConnected();
     void handleReadyRead();
