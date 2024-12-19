@@ -1,11 +1,13 @@
 #include "MainWindow.hpp"
 #include "WizzEffect.hpp"
+#include "UIManager.hpp"
 #include <QStandardItemModel>
 #include <QTime>
 #include <QMessageBox>
 #include <QScrollBar>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QMenu>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), chatClient(nullptr)
@@ -31,12 +33,31 @@ void MainWindow::setupUi()
     
     // Chat area
     textBrowser = new QTextBrowser();
-    textBrowser->setOpenExternalLinks(false);
-    textBrowser->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    UIManager::setupTextBrowser(textBrowser);
     topLayout->addWidget(textBrowser, 7); // 70% width
+
+    // Update textBrowser style
+    textBrowser->setStyleSheet(
+        "QTextBrowser {"
+        "   background-color: #F5F5F5;"  // Light gray background
+        "   border: none;"
+        "   padding: 10px;"
+        "}"
+    );
+    textBrowser->setOpenExternalLinks(false);
+    textBrowser->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    textBrowser->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    textBrowser->document()->setDefaultStyleSheet(
+        "body { margin: 0; padding: 0; }"
+        ".message-sent { background-color: #0078D4; color: white; width: 100%; }"
+        ".message-received { background-color: white; border: 1px solid #E0E0E0; color: black; width: 100%; }"
+        ".timestamp { color: #666666; font-size: 12px; }"
+        ".sender { font-weight: bold; color: #333333; }"
+    );
     
     // Users list
     listClients = new QListWidget();
+    UIManager::setupUserList(listClients);
     topLayout->addWidget(listClients, 3); // 30% width
     
     mainLayout->addLayout(topLayout);
@@ -47,7 +68,7 @@ void MainWindow::setupUi()
     // Message input
     textEdit = new QTextEdit();
     textEdit->setMaximumHeight(50);
-    textEdit->installEventFilter(this);
+    UIManager::setupTextEdit(textEdit);
     bottomLayout->addWidget(textEdit);
     
     // Emoji button
@@ -57,71 +78,15 @@ void MainWindow::setupUi()
     // Buttons
     buttonSend = new QPushButton("Send");
     buttonWizz = new QPushButton("Wizz");
+    UIManager::setupButtons(buttonSend, buttonWizz);
     bottomLayout->addWidget(buttonSend);
     bottomLayout->addWidget(buttonWizz);
     
     mainLayout->addLayout(bottomLayout);
     
     setCentralWidget(centralWidget);
-
-textBrowser->setStyleSheet(
-        "QTextBrowser {"
-        "   background-color: white;"
-        "   border: none;"
-        "   border-radius: 10px;"
-        "   padding: 10px;"
-        "   border: 1px solid rgb(10, 9, 9);"
-        "}"
-    );
-
-    // Style moderne pour la zone de saisie
-    textEdit->setStyleSheet(
-        "QTextEdit {"
-        "   border: 1px solid rgb(219, 203, 203);"
-        "   border-radius: 20px;"
-        "   padding: 10px;"
-        "   background-color: white;"
-        "   margin: 5px;"
-        "}"
-    );
-
-    // Style pour les boutons
-    QString buttonStyle = 
-        "QPushButton {"
-        "   background-color: #0084ff;"
-        "   color: white;"
-        "   border: none;"
-        "   border-radius: 15px;"
-        "   padding: 8px 15px;"
-        "   font-weight: bold;"
-        "}"
-        "QPushButton:hover {"
-        "   background-color: #0073e6;"
-        "}";
-
-    buttonSend->setStyleSheet(buttonStyle);
-    buttonWizz->setStyleSheet(buttonStyle);
-
-    // Style pour la liste des utilisateurs
-    listClients->setStyleSheet(
-        "QListWidget {"
-        "   background-color: white;"
-        "   border: 1px solid rgb(10, 9, 9);"
-        "   border-radius: 10px;"
-        "   padding: 5px;"
-        "}"
-        "QListWidget::item {"
-        "   padding: 8px;"
-        "   border-radius: 5px;"
-        "}"
-        "QListWidget::item:selected {"
-        "   background-color:rgb(88, 120, 155);"
-        "   color: #0084ff;"
-        "}"
-    );
-
+    textEdit->installEventFilter(this);
 }
-
 void MainWindow::setupEmojiButton()
 {
     emojiButton = new QPushButton("😊", this);
@@ -160,36 +125,6 @@ void MainWindow::addEmojiToMessage(const QString& emoji)
     textEdit->insertPlainText(emoji);
 }
 
-QString MainWindow::replaceEmojis(QString message) {
-    QMap<QString, QString> emojiMap = {
-        {":)", "😊"},
-        {":-)", "😊"},
-        {":(", "😢"},
-        {":-(", "😢"},
-        {":D", "😄"},
-        {":-D", "😄"},
-        {"<3", "❤️"},
-        {":p", "😛"},
-        {":P", "😛"},
-        {";)", "😉"},
-        {":o", "😮"},
-        {":O", "😮"},
-        {"xD", "😆"},
-        {"XD", "😆"},
-        {":*", "😘"},
-        {":|", "😐"},
-        {":-|", "😐"},
-        {">:(", "😠"},
-        {":@", "😠"},
-        {":'(", "😢"}
-    };
-
-    for (auto it = emojiMap.begin(); it != emojiMap.end(); ++it) {
-        message.replace(it.key(), it.value());
-    }
-    return message;
-}
-
 void MainWindow::setupConnections()
 {
     connect(buttonSend, &QPushButton::clicked, this, &MainWindow::onBtnSendClicked);
@@ -200,15 +135,17 @@ void MainWindow::setChatClient(ChatClient* client) {
     this->chatClient = client;
     qDebug() << "ChatClient passed to MainWindow!";
 
-    connect(chatClient, &ChatClient::messageReceived, 
-            this, &MainWindow::onMessageReceived);
-    connect(chatClient, &ChatClient::userListUpdated, 
-            this, &MainWindow::updateUserList);
-    connect(chatClient, &ChatClient::disconnected, 
-            this, &MainWindow::handleServerDisconnection);
-
-    if (!chatClient->getOnlineUsers().isEmpty()) {
-        updateUserList(chatClient->getOnlineUsers());
+    connect(chatClient, &ChatClient::messageReceived, this, &MainWindow::onMessageReceived);
+    connect(chatClient, &ChatClient::userListUpdated, this, &MainWindow::updateUserList);
+    connect(chatClient, &ChatClient::disconnected, this, &MainWindow::handleServerDisconnection);
+    connect(chatClient, &ChatClient::wizzReceived, this, &MainWindow::onWizzReceived);
+}
+void MainWindow::onWizzReceived(const QString& sender)
+{
+    qDebug() << "Wizz received from:" << sender;  // Pour le debug
+    if (sender != chatClient->getName()) {
+        WizzEffect* wizzEffect = new WizzEffect(this);
+        wizzEffect->start();
     }
 }
 void MainWindow::updateUserList(const QStringList& users) {
@@ -218,64 +155,19 @@ void MainWindow::updateUserList(const QStringList& users) {
     }
 }
 
-void MainWindow::onBtnSendClicked()
-{
-    QString message = textEdit->toPlainText();
-    if (message.isEmpty()) {
-        return;
-    }
-
-    if (chatClient) {
-        chatClient->sendMessage(message);
-    }
-
-    textBrowser->append(formatMessage(message, true));
-    textEdit->clear();
-    textBrowser->verticalScrollBar()->setValue(
-        textBrowser->verticalScrollBar()->maximum()
-    );
-}
-
-QString MainWindow::formatMessage(const QString& message, bool isSentByMe) {
-    QString timeStamp = QTime::currentTime().toString("hh:mm");
-    QString formattedMessage = replaceEmojis(message);
-    
-    // Style moderne avec des bulles de message arrondies
-    QString style = QString(
-        "<div style='margin: 10px 20px; %1'>"
-        "<div style='display: inline-block; max-width: 70%%; %2'>"
-        "<div style='%3 padding: 12px; border-radius: 18px; position: relative;'>"
-        "<span style='font-size: 14px; color: #%4'>%5</span>"
-        "<div style='font-size: 11px; color: #999; margin-top: 5px; text-align: right'>%6</div>"
-        "</div>"
-        "</div>"
-        "</div>"
-    );
-
-    if (isSentByMe) {
-        return style
-            .arg("text-align: right")                            // Alignement à droite
-            .arg("margin-left: 30%")                            // Marge pour les messages envoyés
-            .arg("background-color: #0084ff; color: white")     // Bleu pour mes messages
-            .arg("000000")                                      // Texte blanc
-            .arg(formattedMessage)
-            .arg(timeStamp);
-    } else {
-        return style
-            .arg("text-align: left")                           // Alignement à gauche
-            .arg("margin-right: 30%")                          // Marge pour les messages reçus
-            .arg("background-color:rgb(95, 74, 74); color: black")    // Gris clair pour les autres
-            .arg("000000")                                     // Texte noir
-            .arg(formattedMessage)
-            .arg(timeStamp);
-    }
-}
 void MainWindow::onPushButtonWizzClicked()
 {
-    WizzEffect *wizzEffect = new WizzEffect(this);
-    wizzEffect->start();
-}
+    // Récupérer le client sélectionné dans la liste
+    QListWidgetItem* selectedItem = listClients->currentItem();
+    if (!selectedItem) {
+        return;  // Aucun client sélectionné
+    }
 
+    QString targetName = selectedItem->text();
+    if (chatClient) {
+        chatClient->sendWizz(targetName);
+    }
+}
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
     if (obj == textEdit && event->type() == QEvent::KeyPress) {
@@ -297,12 +189,29 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 }
 
 void MainWindow::onMessageReceived(const QString& message) {
-    textBrowser->append(formatMessage(message, false));
+    textBrowser->append(UIManager::formatMessage(message, false));
     textBrowser->verticalScrollBar()->setValue(
         textBrowser->verticalScrollBar()->maximum()
     );
 }
 
+void MainWindow::onBtnSendClicked()
+{
+    QString message = textEdit->toPlainText();
+    if (message.isEmpty()) {
+        return;
+    }
+
+    if (chatClient) {
+        chatClient->sendMessage(message);
+    }
+
+    textBrowser->append(UIManager::formatMessage(message, true));
+    textEdit->clear();
+    textBrowser->verticalScrollBar()->setValue(
+        textBrowser->verticalScrollBar()->maximum()
+    );
+}
 void MainWindow::handleServerDisconnection()
 {
     QMessageBox* msgBox = new QMessageBox(this);
