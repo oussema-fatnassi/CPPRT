@@ -1,5 +1,6 @@
 #include "TabManager.hpp"
 #include <QVBoxLayout>
+#include "MessageBubbleManager.hpp"
 
 TabManager::TabManager(QTabWidget* tabWidget, MessageHandler* messageHandler, QObject* parent)
     : QObject(parent), tabWidget(tabWidget), messageHandler(messageHandler) {}
@@ -24,6 +25,7 @@ QListView* TabManager::createNewTab(const QString& username) {
     listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     listView->setWrapping(false);
     listView->setWordWrap(true);
+    listView->setSpacing(12);
     listView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     QVBoxLayout* layout = new QVBoxLayout(newTab);
@@ -31,11 +33,16 @@ QListView* TabManager::createNewTab(const QString& username) {
     layout->addWidget(listView);
     newTab->setLayout(layout);
 
+    // Attach the bubble delegate
+    MessageBubbleManager* delegate = new MessageBubbleManager(listView);
+    listView->setItemDelegate(delegate);
+
     tabWidget->addTab(newTab, username);
     tabWidget->setCurrentWidget(newTab);
 
     return listView;
 }
+
 
 bool TabManager::hasTab(const QString& username) const {
     for (int i = 0; i < tabWidget->count(); ++i) {

@@ -1,6 +1,7 @@
 #include "MainWindow.hpp"
 #include "./ui_MainWindow.h"
 #include <QDebug>
+#include "MessageBubbleManager.hpp"
 
     MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -88,6 +89,19 @@ void MainWindow::setupMainWindowUI()
     ui->listView->setWordWrap(true);
     ui->listView->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     ui->listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    // Set up the MessageBubbleManager for the general channel
+    MessageBubbleManager* delegate = new MessageBubbleManager(ui->listView);
+    ui->listView->setItemDelegate(delegate);
+
+    // Configure the list view for better bubble display
+    ui->listView->setSpacing(8);
+    ui->listView->setUniformItemSizes(false);
+    ui->listView->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    ui->listView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    // Set initial focus to text edit
+    ui->textEdit->setFocus();
 }
 
 bool MainWindow::eventFilter(QObject* obj, QEvent* event)
