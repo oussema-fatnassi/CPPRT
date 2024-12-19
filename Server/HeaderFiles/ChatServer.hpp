@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QTcpSocket>
 
+class QTcpSocket;
 class ChatServer : public QObject {
     Q_OBJECT
     friend class MainWindow;
@@ -33,6 +34,7 @@ private:
     void broadcastMessage(const QString& message, QTcpSocket* sender);
     void sendDirectMessage(const QString& message, const QString& targetName, QTcpSocket* sender);
     QTcpSocket* getSocketByName(const QString& name);
+    
 
     QTcpServer* m_tcpServer;
     QMap<QTcpSocket*, QString> m_clientNames;
