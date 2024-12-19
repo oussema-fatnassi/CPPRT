@@ -62,6 +62,20 @@ void ChatServer::handleReadyRead() {
         // Broadcast the updated list to ALL connected clients
         broadcastClientList();
     }
+    else if (message.startsWith("WIZZ:")) {
+        QString targetName = message.mid(5).trimmed();
+        QString senderName = m_clientNames.value(senderSocket);
+        QTcpSocket* targetSocket = getSocketByName(targetName);
+        
+        if (targetSocket) {
+            QString wizzMessage = "WIZZ:" + senderName;
+            targetSocket->write(wizzMessage.toUtf8());
+            qDebug() << "Wizz sent from" << senderName << "to" << targetName;
+        } else {
+            // Si le destinataire n'est pas trouvé
+            senderSocket->write(QString("SYSTEM:User '%1' not found").arg(targetName).toUtf8());
+        }
+    }
     else if (message.startsWith("DM:")) {
         int firstColon = message.indexOf(':');
         int secondColon = message.indexOf(':', firstColon + 1);
@@ -74,16 +88,6 @@ void ChatServer::handleReadyRead() {
     else {
         broadcastMessage(message, senderSocket);
     }
-}
-
-void ChatServer::broadcastMessage(const QString& message, QTcpSocket* sender) {
-    QString senderName = m_clientNames.value(sender, "Unknown");
-    QString fullMessage = "BROADCAST:" + senderName + ": " + message;
-
-    for (QTcpSocket* clientSocket : m_clients) {
-        clientSocket->write(fullMessage.toUtf8());
-    }
-    qDebug() << "Broadcast message from" << senderName << ":" << message;
 }
 
 void ChatServer::sendDirectMessage(const QString& message, const QString& targetName, QTcpSocket* sender) {
@@ -167,3 +171,12 @@ void ChatServer::disconnectClientByName(const QString &clientName) {
     }
 }
 
+void ChatServer::broadcastMessage(const QString& message, QTcpSocket* sender) {
+    QString senderName = m_clientNames.value(sender, "Unknown");
+    QString fullMessage = "BROADCAST:" + senderName + ": " + message;
+
+    for (QTcpSocket* clientSocket : m_clients) {
+        clientSocket->write(fullMessage.toUtf8());
+    }
+    qDebug() << "Broadcast message from" << senderName << ":" << message;
+}
