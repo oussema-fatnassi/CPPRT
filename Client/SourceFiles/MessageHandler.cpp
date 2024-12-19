@@ -1,4 +1,5 @@
 #include "MessageHandler.hpp"
+#include "MessageBubbleManager.hpp"
 
 MessageHandler::MessageHandler(QObject* parent)
     : QObject(parent), generalChannelModel(nullptr) {}
@@ -8,32 +9,46 @@ void MessageHandler::setGeneralChannelModel(QStandardItemModel* model) {
 }
 
 void MessageHandler::addMessageToGeneral(const QString& message) {
-    if (!generalChannelModel) return;
-
-    QString formattedMessage = formatMessage(message);
-    QStandardItem* item = new QStandardItem(formattedMessage);
-    generalChannelModel->appendRow(item);
+    if (generalChannelModel) {
+        QStandardItem* item = new QStandardItem(message);
+        item->setData(false, Qt::UserRole + 1); // Not a local message
+        generalChannelModel->appendRow(item);
+    }
 }
 
 void MessageHandler::addMessageToTab(QListView* listView, const QString& message, bool isLocalMessage) {
-    if (!listView) return;
+    if (!listView)
+        return;
 
+    // Get the model from the list view
     QStandardItemModel* model = qobject_cast<QStandardItemModel*>(listView->model());
     if (!model) {
         model = new QStandardItemModel(listView);
         listView->setModel(model);
+
+        // Set up the MessageBubbleManager for this list view
+        MessageBubbleManager* delegate = new MessageBubbleManager(listView);
+        listView->setItemDelegate(delegate);
+
+        // Configure the list view
+        listView->setSpacing(12); // Ensure enough spacing between items
+        listView->setUniformItemSizes(false); // Allow different item sizes
+        listView->setWordWrap(true); // Enable word wrapping
     }
 
+    // Add the message item
     QStandardItem* item = new QStandardItem(message);
-    item->setData(isLocalMessage, Qt::UserRole);
+    item->setData(isLocalMessage, Qt::UserRole + 1);
     model->appendRow(item);
+
+    // Scroll to the bottom
     listView->scrollToBottom();
 }
 
+
 QString MessageHandler::formatMessage(const QString& message, const QString& sender) {
-    QString timestamp = QTime::currentTime().toString("hh:mm:ss");
     if (sender.isEmpty()) {
-        return QString("[%1] %2").arg(timestamp).arg(message);
+        return message;
     }
-    return QString("[%1] %2: %3").arg(timestamp).arg(sender).arg(message);
+    return QString("%1: %2").arg(sender, message);
 }
