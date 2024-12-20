@@ -45,11 +45,11 @@ void SignupWindow::validateFields()
 
 bool SignupWindow::saveUserToXML()
 {
-    // Utiliser le dossier de documents de l'utilisateur
+    // Use the current directory as the save location
     QString saveDir = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/ChatApp";
     QDir dir(saveDir);
     
-    // Créer le dossier s'il n'existe pas
+    // Create the directory if it doesn't exist
     if (!dir.exists()) {
         dir.mkpath(".");
     }
@@ -59,7 +59,7 @@ bool SignupWindow::saveUserToXML()
     
     qDebug() << "Attempting to save to:" << filePath;
 
-    // Si le fichier n'existe pas, le créer avec la structure de base
+    // If the file doesn't exist, create it
     if (!file.exists()) {
         qDebug() << "Creating new XML file...";
         if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -76,7 +76,7 @@ bool SignupWindow::saveUserToXML()
         file.close();
     }
 
-    // Ouvrir le fichier en lecture
+    // Open the file
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qDebug() << "Failed to open file for reading:" << file.errorString();
         return false;
@@ -96,7 +96,7 @@ bool SignupWindow::saveUserToXML()
         doc.appendChild(root);
     }
 
-    // Créer le nouvel élément utilisateur
+    // Crate a new user
     QDomElement newUser = doc.createElement("user");
     newUser.setAttribute("firstName", ui->firstNameInput->text());
     newUser.setAttribute("lastName", ui->lastNameInput->text());
@@ -106,7 +106,7 @@ bool SignupWindow::saveUserToXML()
 
     root.appendChild(newUser);
 
-    // Réécrire le fichier
+    // Recreate the file
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         qDebug() << "Failed to open file for writing:" << file.errorString();
         return false;
