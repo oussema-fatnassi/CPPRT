@@ -115,7 +115,7 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event)
 
 void MainWindow::onGeneralMessageReceived(const QString& message)
 {
-    messageHandler->addMessageToGeneral(message);
+    messageHandler->addMessageToGeneral(message, false);
     ui->listView->scrollToBottom();
 }
 
