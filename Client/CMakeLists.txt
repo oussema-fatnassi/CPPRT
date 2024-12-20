@@ -12,8 +12,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Find Qt packages
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Network Widgets Multimedia)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Network Widgets Multimedia)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Network Widgets Multimedia Xml)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Network Widgets Multimedia Xml)
 
 # Define source, header, and UI directories
 set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/SourceFiles")
@@ -23,10 +23,35 @@ set(UI_DIR "${CMAKE_SOURCE_DIR}/UIFiles")
 # Set AUTOUIC search path to find .ui files
 set(CMAKE_AUTOUIC_SEARCH_PATHS "${UI_DIR}")
 
-# Automatically add all .cpp, .hpp, and .ui files
-file(GLOB_RECURSE PROJECT_SOURCES "${SOURCE_DIR}/*.cpp")
-file(GLOB_RECURSE PROJECT_HEADERS "${HEADER_DIR}/*.hpp")
-file(GLOB_RECURSE PROJECT_UIS "${UI_DIR}/*.ui")
+# List all source files
+set(PROJECT_SOURCES
+    ${SOURCE_DIR}/main.cpp
+    ${SOURCE_DIR}/ChatClient.cpp
+    ${SOURCE_DIR}/ConnectionWindow.cpp
+    ${SOURCE_DIR}/EnvLoader.cpp
+    ${SOURCE_DIR}/MainWindow.cpp
+    ${SOURCE_DIR}/UIManager.cpp
+    ${SOURCE_DIR}/WizzEffect.cpp
+    ${SOURCE_DIR}/SignupWindow.cpp
+)
+
+# List all header files
+set(PROJECT_HEADERS
+    ${HEADER_DIR}/ChatClient.hpp
+    ${HEADER_DIR}/ConnectionWindow.hpp
+    ${HEADER_DIR}/EnvLoader.hpp
+    ${HEADER_DIR}/MainWindow.hpp
+    ${HEADER_DIR}/UIManager.hpp
+    ${HEADER_DIR}/WizzEffect.hpp
+    ${HEADER_DIR}/SignupWindow.hpp
+)
+
+# List UI files
+set(PROJECT_UIS
+    ${UI_DIR}/ConnectionWindow.ui
+    ${UI_DIR}/MainWindow.ui
+    ${UI_DIR}/SignupWindow.ui
+)
 
 # Add resources
 qt_add_resources(PROJECT_RESOURCES resources/resources.qrc)
@@ -58,6 +83,7 @@ target_link_libraries(Client PRIVATE
     Qt${QT_VERSION_MAJOR}::Network 
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Multimedia
+    Qt${QT_VERSION_MAJOR}::Xml
 )
 
 # Set target properties for macOS and Windows
