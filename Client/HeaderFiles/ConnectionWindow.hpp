@@ -1,8 +1,9 @@
 #ifndef CONNECTIONWINDOW_HPP
 #define CONNECTIONWINDOW_HPP
 
-#include <QtCore/qtconfigmacros.h>
 #include <QMainWindow>
+#include <QRegularExpression>
+#include <QCryptographicHash>
 #include "ChatClient.hpp"
 
 QT_BEGIN_NAMESPACE
@@ -21,12 +22,20 @@ public:
 
 private slots:
     void onButtonConnectionClicked();
+    void validateEmail(const QString& email);
+    void validatePassword(const QString& password);
+    void onSignupLinkClicked();
 
 private:
     void setupConnectionWindowUI();
+    bool isValidEmail(const QString& email);
+    bool isStrongPassword(const QString& password);
+    QString hashPassword(const QString& password);
+    
     ChatClient *chatClient;
-
     Ui::ConnectionWindow *ui;
+    bool isEmailValid;
+    bool isPasswordValid;
 };
 
 #endif // CONNECTIONWINDOW_HPP
