@@ -2,9 +2,11 @@
 #define CONNECTIONWINDOW_HPP
 
 #include <QMainWindow>
-#include <QRegularExpression>
-#include <QCryptographicHash>
 #include "ChatClient.hpp"
+#include "SignupWindow.hpp"
+#include "MainWindow.hpp"
+#include <QHostAddress>
+#include <QStandardPaths>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -22,20 +24,21 @@ public:
 
 private slots:
     void onButtonConnectionClicked();
+    void onSignupLinkClicked();
     void validateEmail(const QString& email);
     void validatePassword(const QString& password);
-    void onSignupLinkClicked();
 
 private:
     void setupConnectionWindowUI();
+    bool authenticateUser(const QString& email, const QString& password, QString& username);
     bool isValidEmail(const QString& email);
-    bool isStrongPassword(const QString& password);
-    QString hashPassword(const QString& password);
     
-    ChatClient *chatClient;
-    Ui::ConnectionWindow *ui;
+    ChatClient* chatClient;
+    Ui::ConnectionWindow* ui;
     bool isEmailValid;
     bool isPasswordValid;
+    QString ipAddress;
+    quint16 port;
 };
 
 #endif // CONNECTIONWINDOW_HPP
