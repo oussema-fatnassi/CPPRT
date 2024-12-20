@@ -41,15 +41,11 @@ void UIEventHandler::onSendClicked() {
     } else {
         if (chatClient) {
             chatClient->sendDirectMessage(currentTab, message);
-            QListView* listView = tabManager->getOrCreateTab(currentTab);
-            QString formattedMessage = messageHandler->formatMessage(message, "You");
-            messageHandler->addMessageToTab(listView, formattedMessage, true);
         }
     }
 
     textEdit->clear();
 }
-
 void UIEventHandler::onUserDoubleClicked(QListWidgetItem* item) {
     QString username = item->text();
     tabManager->getOrCreateTab(username);

@@ -1,6 +1,7 @@
 #include "MainWindow.hpp"
 #include "./ui_MainWindow.h"
 #include <QDebug>
+#include "MessageBubbleManager.hpp"
 
     MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -88,6 +89,19 @@ void MainWindow::setupMainWindowUI()
     ui->listView->setWordWrap(true);
     ui->listView->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     ui->listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    // Set up the MessageBubbleManager for the general channel
+    MessageBubbleManager* delegate = new MessageBubbleManager(ui->listView);
+    ui->listView->setItemDelegate(delegate);
+
+    // Configure the list view for better bubble display
+    ui->listView->setSpacing(8);
+    ui->listView->setUniformItemSizes(false);
+    ui->listView->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    ui->listView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    // Set initial focus to text edit
+    ui->textEdit->setFocus();
 }
 
 bool MainWindow::eventFilter(QObject* obj, QEvent* event)
@@ -119,8 +133,7 @@ void MainWindow::onPrivateMessageReceived(const QString& senderName,
         return;
     }
 
-    // Format message based on sender
-    QString formattedMessage;
+    // If this is a local message (we sent it)
     if (senderName == chatClient->getName()) {
         // Check for duplicate messages
         QStandardItemModel* model = qobject_cast<QStandardItemModel*>(listView->model());
@@ -128,18 +141,15 @@ void MainWindow::onPrivateMessageReceived(const QString& senderName,
             for (int i = 0; i < model->rowCount(); ++i) {
                 QStandardItem* existingItem = model->item(i);
                 if (existingItem->data(Qt::UserRole).toBool() &&
-                    existingItem->text().contains(dmContent)) {
+                    existingItem->text() == dmContent) {  // Direct content comparison
                     return;  // Skip duplicate messages
                 }
             }
         }
-        formattedMessage = messageHandler->formatMessage(dmContent, "You");
-    } else {
-        formattedMessage = messageHandler->formatMessage(dmContent, senderName);
     }
 
-    // Add message to tab and scroll to bottom
-    messageHandler->addMessageToTab(listView, formattedMessage,
+    // Just add the content without any sender prefix
+    messageHandler->addMessageToTab(listView, dmContent,
                                     senderName == chatClient->getName());
     listView->scrollToBottom();
 
