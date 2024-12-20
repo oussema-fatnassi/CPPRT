@@ -36,7 +36,7 @@ void UIEventHandler::onSendClicked() {
     if (currentTab == "General Channel") {
         if (chatClient) {
             chatClient->sendMessage(message);
-            messageHandler->addMessageToGeneral(message);
+            messageHandler->addMessageToGeneral(message, true);
         }
     } else {
         if (chatClient) {

@@ -8,10 +8,10 @@ void MessageHandler::setGeneralChannelModel(QStandardItemModel* model) {
     generalChannelModel = model;
 }
 
-void MessageHandler::addMessageToGeneral(const QString& message) {
+void MessageHandler::addMessageToGeneral(const QString& message , bool isLocalMessage) {
     if (generalChannelModel) {
         QStandardItem* item = new QStandardItem(message);
-        item->setData(false, Qt::UserRole + 1); // Not a local message
+        item->setData(isLocalMessage, Qt::UserRole + 1);
         item->setData(QTime::currentTime().toString("hh:mm"), Qt::UserRole + 2);
         generalChannelModel->appendRow(item);
     }

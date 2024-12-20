@@ -13,7 +13,7 @@ class MessageHandler : public QObject {
 public:
     explicit MessageHandler(QObject* parent = nullptr);
     void setGeneralChannelModel(QStandardItemModel* model);
-    void addMessageToGeneral(const QString& message);
+    void addMessageToGeneral(const QString& message , bool isLocalMessage);
     void addMessageToTab(QListView* listView, const QString& message, bool isLocalMessage = false);
     QString formatMessage(const QString& message, const QString& sender = QString());
 
