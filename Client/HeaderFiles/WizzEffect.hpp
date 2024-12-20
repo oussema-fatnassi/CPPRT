@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QPoint>
 #include <QTimer>
+#include <QMediaPlayer>
+#include <QAudioOutput>
 
 class WizzEffect : public QObject {
     Q_OBJECT
@@ -19,6 +21,8 @@ private:
     QWidget *targetWidget;
     QPoint originalPosition;
     QTimer *shakeTimer;
+    QMediaPlayer *mediaPlayer;
+    QAudioOutput *audioOutput;
     int shakeDistance;
     int shakeCount;
     int shakeDuration;
