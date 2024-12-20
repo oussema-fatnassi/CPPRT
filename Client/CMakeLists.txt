@@ -12,8 +12,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Find Qt packages
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Network Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Network Widgets)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Network Widgets Multimedia)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Network Widgets Multimedia)
 
 # Define source, header, and UI directories
 set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/SourceFiles")
@@ -27,10 +27,10 @@ set(CMAKE_AUTOUIC_SEARCH_PATHS "${UI_DIR}")
 file(GLOB_RECURSE PROJECT_SOURCES "${SOURCE_DIR}/*.cpp")
 file(GLOB_RECURSE PROJECT_HEADERS "${HEADER_DIR}/*.hpp")
 file(GLOB_RECURSE PROJECT_UIS "${UI_DIR}/*.ui")
-set(PROJECT_SOURCE_LIST
-    "${SOURCE_DIR}/UIManager.cpp"
-    "${HEADER_DIR}/UIManager.hpp"
-)
+
+# Add resources
+qt_add_resources(PROJECT_RESOURCES resources/resources.qrc)
+
 # Add executable target with the appropriate sources
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Client
@@ -38,48 +38,52 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         ${PROJECT_HEADERS}
         ${PROJECT_UIS}
-        ${PROJECT_SOURCE_LIST} 
+        ${PROJECT_RESOURCES}
     )
 else()
     add_executable(Client
         ${PROJECT_SOURCES}
         ${PROJECT_HEADERS}
         ${PROJECT_UIS}
+        ${PROJECT_RESOURCES}
     )
 endif()
 
 # Include directories for headers
 include_directories(${HEADER_DIR})
 
-# Link Qt Widgets library
-target_link_libraries(Client PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Network Qt${QT_VERSION_MAJOR}::Widgets)
+# Link Qt libraries
+target_link_libraries(Client PRIVATE 
+    Qt${QT_VERSION_MAJOR}::Core 
+    Qt${QT_VERSION_MAJOR}::Network 
+    Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::Multimedia
+)
 
 # Set target properties for macOS and Windows
 if(APPLE)
-    # macOS settings
     set_target_properties(Client PROPERTIES
         MACOSX_BUNDLE TRUE
     )
     if(${QT_VERSION} VERSION_LESS 6.1.0)
-      set_target_properties(Client PROPERTIES
-        MACOSX_BUNDLE_GUI_IDENTIFIER com.example.Client
-        MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-        MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-      )
+        set_target_properties(Client PROPERTIES
+            MACOSX_BUNDLE_GUI_IDENTIFIER com.example.Client
+            MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+            MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+        )
     endif()
 elseif(WIN32)
-    # Windows settings
     set_target_properties(Client PROPERTIES
         WIN32_EXECUTABLE TRUE
     )
 endif()
 
-# Finalize executable for Qt 6 on both platforms
+# Finalize executable for Qt 6
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(Client)
 endif()
 
-# Install directives for both platforms
+# Install directives
 include(GNUInstallDirs)
 install(TARGETS Client
     BUNDLE DESTINATION .
