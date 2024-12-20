@@ -15,7 +15,7 @@ void MessageBubbleManager::paint(QPainter* painter, const QStyleOptionViewItem& 
 
     // Get the item data
     QString message = index.data(Qt::DisplayRole).toString();
-    QString timestamp = QTime::currentTime().toString("hh:mm");
+    QString timestamp = index.data(Qt::UserRole + 2).toString();
     bool isLocalMessage = index.data(Qt::UserRole + 1).toBool();
 
     // Draw the message bubble

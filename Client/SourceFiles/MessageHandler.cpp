@@ -12,6 +12,7 @@ void MessageHandler::addMessageToGeneral(const QString& message) {
     if (generalChannelModel) {
         QStandardItem* item = new QStandardItem(message);
         item->setData(false, Qt::UserRole + 1); // Not a local message
+        item->setData(QTime::currentTime().toString("hh:mm"), Qt::UserRole + 2); // Timestamp
         generalChannelModel->appendRow(item);
     }
 }
@@ -39,6 +40,7 @@ void MessageHandler::addMessageToTab(QListView* listView, const QString& message
     // Add the message item
     QStandardItem* item = new QStandardItem(message);
     item->setData(isLocalMessage, Qt::UserRole + 1);
+    item->setData(QTime::currentTime().toString("hh:mm"), Qt::UserRole + 2); // Timestamp
     model->appendRow(item);
 
     // Scroll to the bottom
