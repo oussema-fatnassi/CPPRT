@@ -133,8 +133,7 @@ void MainWindow::onPrivateMessageReceived(const QString& senderName,
         return;
     }
 
-    // Format message based on sender
-    QString formattedMessage;
+    // If this is a local message (we sent it)
     if (senderName == chatClient->getName()) {
         // Check for duplicate messages
         QStandardItemModel* model = qobject_cast<QStandardItemModel*>(listView->model());
@@ -142,18 +141,15 @@ void MainWindow::onPrivateMessageReceived(const QString& senderName,
             for (int i = 0; i < model->rowCount(); ++i) {
                 QStandardItem* existingItem = model->item(i);
                 if (existingItem->data(Qt::UserRole).toBool() &&
-                    existingItem->text().contains(dmContent)) {
+                    existingItem->text() == dmContent) {  // Direct content comparison
                     return;  // Skip duplicate messages
                 }
             }
         }
-        formattedMessage = messageHandler->formatMessage(dmContent, "You");
-    } else {
-        formattedMessage = messageHandler->formatMessage(dmContent, senderName);
     }
 
-    // Add message to tab and scroll to bottom
-    messageHandler->addMessageToTab(listView, formattedMessage,
+    // Just add the content without any sender prefix
+    messageHandler->addMessageToTab(listView, dmContent,
                                     senderName == chatClient->getName());
     listView->scrollToBottom();
 
