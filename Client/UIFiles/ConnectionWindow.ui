@@ -6,62 +6,188 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1068</width>
+    <width>800</width>
     <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Sign In</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+    QMainWindow {
+        background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+                                  stop:0 #4158D0,
+                                  stop:0.5 #C850C0,
+                                  stop:1 #FFCC70);
+    }
+    
+    QFrame#loginFrame {
+        background-color: white;
+        border-radius: 20px;
+    }
+
+    QLineEdit {
+        padding: 10px;
+        border: 1px solid #E0E0E0;
+        border-radius: 5px;
+        background-color: #F8F9FA;
+        font-size: 14px;
+        margin: 5px 0px;
+    }
+
+    QLineEdit:focus {
+        border: 2px solid #4158D0;
+        background-color: white;
+    }
+
+    QPushButton#connectButton {
+        background-color: #4158D0;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        font-weight: bold;
+        font-size: 14px;
+        margin-top: 15px;
+    }
+
+    QPushButton#connectButton:hover {
+        background-color: #3447B5;
+    }
+
+    QLabel#titleLabel {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+        margin: 20px 0px;
+    }
+
+    QLabel {
+        color: #666;
+    }
+   </string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QFrame" name="frame">
-      <property name="frameShape">
-       <enum>QFrame::Shape::StyledPanel</enum>
+     <spacer name="verticalSpacer1">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
       </property>
-      <property name="frameShadow">
-       <enum>QFrame::Shadow::Raised</enum>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
       </property>
-      <widget class="QPushButton" name="connectButton">
-       <property name="geometry">
-        <rect>
-         <x>420</x>
-         <y>430</y>
-         <width>181</width>
-         <height>61</height>
-        </rect>
+     </spacer>
+    </item>
+    <item alignment="Qt::AlignHCenter">
+     <widget class="QFrame" name="loginFrame">
+      <property name="minimumSize">
+       <size>
+        <width>400</width>
+        <height>450</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>400</width>
+        <height>450</height>
+       </size>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="spacing">
+        <number>15</number>
        </property>
-       <property name="text">
-        <string>CONNECT</string>
+       <property name="leftMargin">
+        <number>40</number>
        </property>
-      </widget>
-      <widget class="QLineEdit" name="usernameInput">
-       <property name="geometry">
-        <rect>
-         <x>370</x>
-         <y>220</y>
-         <width>300</width>
-         <height>50</height>
-        </rect>
+       <property name="topMargin">
+        <number>40</number>
        </property>
-      </widget>
+       <property name="rightMargin">
+        <number>40</number>
+       </property>
+       <property name="bottomMargin">
+        <number>40</number>
+       </property>
+       <item alignment="Qt::AlignHCenter">
+        <widget class="QLabel" name="titleLabel">
+         <property name="text">
+          <string>Sign In</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="emailInput">
+         <property name="placeholderText">
+          <string>Enter your email</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="emailValidationLabel">
+         <property name="styleSheet">
+          <string>color: #dc3545;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="passwordInput">
+         <property name="echoMode">
+          <enum>QLineEdit::Password</enum>
+         </property>
+         <property name="placeholderText">
+          <string>Enter your password</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="passwordValidationLabel">
+         <property name="styleSheet">
+          <string>color: #dc3545;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="connectButton">
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="text">
+          <string>Sign In</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="signupLabel">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Not a member? &lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#4158D0;&quot;&gt;Sign up now&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer2">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1068</width>
-     <height>24</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources/>
- <connections/>
 </ui>
