@@ -23,15 +23,14 @@ bool ChatClient::connectToServer(const QHostAddress& host, quint16 port) {
     m_tcpSocket->connectToHost(host, port);
 
     // Wait for connection with a timeout
-    if (m_tcpSocket->waitForConnected(5000)) { // Increased timeout to 5 seconds
+    if (m_tcpSocket->waitForConnected(5000)) {
         qDebug() << "Connection established successfully.";
         m_tcpSocket->write(("NAME:" + m_name).toUtf8());
-        return true;  // Connection successful
+        return true;
     } else {
-        // Log the specific error
         qDebug() << "Connection failed:" << m_tcpSocket->errorString();
         qDebug() << "Socket state:" << m_tcpSocket->state();
-        return false;  // Connection failed
+        return false;
     }
 }
 
@@ -67,25 +66,19 @@ void ChatClient::handleReadyRead() {
         return;
     }
     if (message.startsWith("USERS:")) {
-        // Extract the list of users
         QString usersString = message.mid(6);
         QStringList updatedUsers = usersString.split(",", Qt::SkipEmptyParts);
-
-        // Update the internal list of online users
         m_onlineUsers = updatedUsers;
-
-        // Remove the current user from the list
         m_onlineUsers.removeAll(m_name);
 
         qDebug() << "Received user list:" << m_onlineUsers;
 
-        // Emit the signal with the updated list
         emit userListUpdated(m_onlineUsers);
     }
     else if (message.startsWith("BROADCAST:")) {
         QString actualMessage = message.mid(10);
         if (actualMessage.startsWith(m_name + ":")) {
-            return; // Do not emit the signal for the sender's own message
+            return;
         }
         qDebug() << "[Broadcast]" << actualMessage;
         emit messageReceived(actualMessage);
@@ -111,7 +104,6 @@ bool ChatClient::isConnected() const {
 }
 
 QStringList ChatClient::getOnlineUsers() const {
-    // Return a copy of the online users list, excluding the current user
     QStringList users = m_onlineUsers;
     return users;
 }
