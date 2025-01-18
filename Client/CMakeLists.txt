@@ -12,8 +12,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Find Qt packages
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Network Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Network Widgets)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Network Widgets Multimedia)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Network Widgets Multimedia)
 
 # Define source, header, and UI directories
 set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/SourceFiles")
@@ -27,6 +27,10 @@ set(CMAKE_AUTOUIC_SEARCH_PATHS "${UI_DIR}")
 file(GLOB_RECURSE PROJECT_SOURCES "${SOURCE_DIR}/*.cpp")
 file(GLOB_RECURSE PROJECT_HEADERS "${HEADER_DIR}/*.hpp")
 file(GLOB_RECURSE PROJECT_UIS "${UI_DIR}/*.ui")
+
+# Add the resources.qrc file
+set(RESOURCE_DIR "${CMAKE_SOURCE_DIR}/resources")
+qt_add_resources(RESOURCES "${RESOURCE_DIR}/resources.qrc")
 
 # Add executable target with the appropriate sources
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -48,7 +52,7 @@ endif()
 include_directories(${HEADER_DIR})
 
 # Link Qt Widgets library
-target_link_libraries(Client PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Network Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(Client PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Network Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Multimedia)
 
 # Set target properties for macOS and Windows
 if(APPLE)
