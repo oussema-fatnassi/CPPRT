@@ -57,14 +57,11 @@ void MainWindow::setChatClient(ChatClient* client)
     wizzManager->setChatClient(client);
 
     // Connect signals
-    connect(chatClient, &ChatClient::messageReceived,
-            this, &MainWindow::onGeneralMessageReceived);
-    connect(chatClient, &ChatClient::privateMessageReceived,
-            this, &MainWindow::onPrivateMessageReceived);
-    connect(chatClient, &ChatClient::userListUpdated,
-            uiEventHandler, &UIEventHandler::updateUserList);
-    connect(chatClient, &ChatClient::wizzReceived,
-            wizzManager, &WizzManager::triggerWizzEffect);
+    connect(chatClient, &ChatClient::messageReceived, this, &MainWindow::onGeneralMessageReceived);
+    connect(chatClient, &ChatClient::privateMessageReceived, this, &MainWindow::onPrivateMessageReceived);
+    connect(chatClient, &ChatClient::userListUpdated, uiEventHandler, &UIEventHandler::updateUserList);
+    connect(chatClient, &ChatClient::wizzReceived, wizzManager, &WizzManager::triggerWizzEffect);
+    connect(chatClient, &ChatClient::disconnected, this, &MainWindow::handleServerDisconnection);
 
     // Initialize user list if available
     if (!chatClient->getOnlineUsers().isEmpty()) {
@@ -157,4 +154,31 @@ void MainWindow::onPrivateMessageReceived(const QString& senderName,
     if (!uiEventHandler->hasChatClient()) {
         uiEventHandler->setChatClient(chatClient);
     }
+}
+
+void MainWindow::handleServerDisconnection()
+{
+    // Create and configure the disconnection message box
+    QMessageBox* msgBox = new QMessageBox(this);
+    msgBox->setWindowTitle("Disconnection");
+    msgBox->setText("You have been disconnected.");
+    msgBox->setIcon(QMessageBox::Warning);
+    msgBox->setStandardButtons(QMessageBox::Ok);
+    // Connect the OK button to close the window
+    connect(msgBox, &QMessageBox::finished, this, [this]() {
+        // Cleanup before closing
+        if (chatClient) {
+            chatClient->deleteLater();
+            chatClient = nullptr;
+        }
+        // Close the main window
+        this->close();
+    });
+    // Show the message box
+    msgBox->show();
+    
+    // Disable UI controls
+    ui->buttonSend->setEnabled(false);
+    ui->buttonWizz->setEnabled(false);
+    ui->textEdit->setEnabled(false);
 }
