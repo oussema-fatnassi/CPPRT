@@ -36,6 +36,7 @@ signals:
     void userListUpdated(const QStringList& users);
     void nameRejected(const QString& reason);
     void privateMessageReceived(const QString& sender, const QString& recipient, const QString& message);
+    void disconnected();
 
 };
 #endif // CHAT_CLIENT_H

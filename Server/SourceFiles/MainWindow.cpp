@@ -27,7 +27,6 @@ void MainWindow::setupConnections()
 
     // Connect the send buttons in the tabs
     connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::onSendMessageTab1Clicked);
-    connect(ui->pushButton_2, &QPushButton::clicked, this, &MainWindow::onSendMessageTab2Clicked);
 }
 
 void MainWindow::onDisconnectButtonClicked() {

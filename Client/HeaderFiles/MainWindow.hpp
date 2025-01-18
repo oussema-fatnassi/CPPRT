@@ -7,6 +7,7 @@
 #include "TabManager.hpp"
 #include "UIEventHandler.hpp"
 #include "WizzManager.hpp"
+#include <QMessageBox>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -24,8 +25,8 @@ public:
 
 private slots:
     void onGeneralMessageReceived(const QString& message);
-    void onPrivateMessageReceived(const QString& senderName, const QString& recipient,
-                                  const QString& dmContent);
+    void onPrivateMessageReceived(const QString& senderName, const QString& recipient, const QString& dmContent);
+    void handleServerDisconnection();
 
 private:
     void setupMainWindowUI();
