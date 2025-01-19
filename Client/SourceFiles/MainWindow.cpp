@@ -2,10 +2,12 @@
 #include "./ui_MainWindow.h"
 #include <QDebug>
 #include "MessageBubbleManager.hpp"
+#include <QToolButton>
 
     MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , emojiManager(new EmojiManager(this))
     , chatClient(nullptr)
 {
     ui->setupUi(this);
@@ -15,6 +17,15 @@
     // Initialize models
     listViewModel = new QStandardItemModel(this);
     ui->listView->setModel(listViewModel);
+
+    // Create the emoji button via EmojiManager
+    QToolButton* emojiButton = emojiManager->setupEmojiButton(this, 735, 490, 81, 32);
+
+    // Connect the emojiSelected signal to insert emojis into the text edit
+    connect(emojiManager, &EmojiManager::emojiSelected, this, [this](const QString& emoji) {
+        ui->textEdit->insertPlainText(emoji);
+        ui->textEdit->setFocus();
+    });
 
     // Initialize handlers and managers
     messageHandler = new MessageHandler(this);

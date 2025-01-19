@@ -8,6 +8,7 @@
 #include "UIEventHandler.hpp"
 #include "WizzManager.hpp"
 #include <QMessageBox>
+#include "EmojiManager.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -36,6 +37,7 @@ private:
     ChatClient* chatClient;
     MessageHandler* messageHandler;
     TabManager* tabManager;
+    EmojiManager* emojiManager;
     UIEventHandler* uiEventHandler;
     WizzManager* wizzManager;
     QStandardItemModel* listViewModel;
