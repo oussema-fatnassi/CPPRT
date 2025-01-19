@@ -35,6 +35,7 @@ private slots:
     void onSendMessageTab1Clicked();
     void onSendMessageTab2Clicked();
     void updateClientList();
+    void onGeneralMessageReceived(const QString& message);
 
 private:
     Ui::MainWindow *ui;

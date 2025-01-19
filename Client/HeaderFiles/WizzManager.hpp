@@ -5,6 +5,8 @@
 #include <QListWidget>
 #include "ChatClient.hpp"
 #include "WizzEffect.hpp"
+#include <QMediaPlayer>
+#include <QAudioOutput>
 
 class WizzManager : public QObject {
     Q_OBJECT
@@ -23,6 +25,8 @@ private:
     QListWidget* clientsList;
     ChatClient* chatClient;
     QWidget* effectParent;
+    QMediaPlayer* wizzSound;
+    QAudioOutput* audioOutput;
 };
 
 #endif // WIZZMANAGER_HPP

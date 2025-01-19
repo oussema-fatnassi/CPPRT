@@ -9,6 +9,8 @@ MainWindow::MainWindow(ChatServer* server, QWidget *parent)
     ui->setupUi(this);
     setWindowTitle("Server");
 
+    connect(m_chatServer, &ChatServer::generalMessageReceived, this, &MainWindow::onGeneralMessageReceived);
+
     // Setup widget connections
     setupConnections();
     connect(m_chatServer, &ChatServer::clientListChanged, this, &MainWindow::updateClientList);
@@ -85,3 +87,21 @@ void MainWindow::updateClientList() {
         }
     }
 }
+
+void MainWindow::onGeneralMessageReceived(const QString& message) {
+    if (ui->listWidgetGeneralMessages) { // Ensure the widget exists
+        QString cleanedMessage = message;
+
+        // Remove the "BROADCAST:" prefix if it exists
+        if (cleanedMessage.startsWith("BROADCAST:")) {
+            cleanedMessage = cleanedMessage.mid(QString("BROADCAST:").length());
+        }
+
+        ui->listWidgetGeneralMessages->addItem(cleanedMessage); // Add the cleaned message
+    } else {
+        qDebug() << "listWidgetGeneralMessages widget not found in the UI.";
+    }
+}
+
+
+

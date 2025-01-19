@@ -13,6 +13,7 @@ class ChatServer : public QObject {
 
 signals:
     void clientListChanged();
+    void generalMessageReceived(const QString& message);
 
 public:
     ChatServer(QObject* parent = nullptr);
