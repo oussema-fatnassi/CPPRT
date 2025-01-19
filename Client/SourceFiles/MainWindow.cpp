@@ -19,7 +19,7 @@
     ui->listView->setModel(listViewModel);
 
     // Create the emoji button via EmojiManager
-    QPushButton* emojiButton = emojiManager->setupEmojiButton(this, 755, 490, 30, 30);
+    QPushButton* emojiButton = emojiManager->setupEmojiButton(this, 720, 475, 30, 30);
 
     // Connect the emojiSelected signal to insert emojis into the text edit
     connect(emojiManager, &EmojiManager::emojiSelected, this, [this](const QString& emoji) {
@@ -110,6 +110,8 @@ void MainWindow::setupMainWindowUI()
 
     // Set initial focus to text edit
     ui->textEdit->setFocus();
+    ui->textEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    ui->textEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
 bool MainWindow::eventFilter(QObject* obj, QEvent* event)

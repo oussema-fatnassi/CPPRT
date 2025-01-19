@@ -23,27 +23,42 @@
       <property name="frameShadow">
        <enum>QFrame::Shadow::Raised</enum>
       </property>
-      <widget class="QLabel" name="label_2">
-       <property name="geometry">
-        <rect>
-         <x>40</x>
-         <y>20</y>
-         <width>81</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Messages</string>
-       </property>
-      </widget>
       <widget class="QPushButton" name="buttonWizz">
        <property name="geometry">
         <rect>
-         <x>900</x>
-         <y>460</y>
-         <width>93</width>
-         <height>29</height>
+         <x>740</x>
+         <y>480</y>
+         <width>80</width>
+         <height>30</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+    background-color: #3c3c3c; /* Dark button background */
+    color: #ffffff;           /* White text */
+    border: 1px solid #555;   /* Border color */
+    border-radius: 5px;       /* Rounded corners */
+    padding: 5px 10px;        /* Padding for button content */
+    font-size: 14px;          /* Font size */
+    font-family: Arial, sans-serif; /* Font family */
+}
+
+QPushButton:hover {
+    background-color: #4c4c4c; /* Lighter background on hover */
+    border: 1px solid #666;    /* Lighter border on hover */
+}
+
+QPushButton:pressed {
+    background-color: #2b2b2b; /* Darker background on press */
+    border: 1px solid #777;    /* Even lighter border on press */
+}
+
+QPushButton:disabled {
+    background-color: #555;    /* Gray background for disabled state */
+    color: #888;               /* Lighter text color for disabled state */
+    border: 1px solid #666;    /* Gray border for disabled state */
+}
+</string>
        </property>
        <property name="text">
         <string>Wizz</string>
@@ -58,41 +73,109 @@
          <height>371</height>
         </rect>
        </property>
+       <property name="styleSheet">
+        <string notr="true">QListView {
+    background-color: #2b2b2b; /* Dark background */
+    color: #ffffff;           /* White text */
+    border: 1px solid #555;   /* Border color */
+    border-radius: 5px;       /* Rounded corners */
+    padding: 5px;             /* Padding inside the list view */
+    font-size: 14px;          /* Font size */
+    font-family: Arial, sans-serif; /* Font family */
+}
+
+QListView::item {
+    background-color: #2b2b2b; /* Default item background */
+    color: #ffffff;            /* Default item text color */
+    padding: 5px;              /* Padding around each item */
+    border-bottom: 1px solid #444; /* Divider between items */
+}
+
+QListView::item:hover {
+    background-color: #3c3c3c; /* Lighter background on hover */
+    color: #ffffff;            /* Text color on hover */
+}
+
+QListView::item:selected {
+    background-color: #555;    /* Highlighted background for selected item */
+    color: #ffffff;            /* Highlighted text color for selected item */
+}
+
+QListView::item:selected:active {
+    background-color: #666;    /* Slightly darker background when active */
+    color: #ffffff;
+}
+</string>
+       </property>
       </widget>
       <widget class="QPushButton" name="buttonSend">
        <property name="geometry">
         <rect>
-         <x>720</x>
+         <x>740</x>
          <y>440</y>
-         <width>81</width>
-         <height>32</height>
+         <width>80</width>
+         <height>30</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+    background-color: #3c3c3c; /* Dark button background */
+    color: #ffffff;           /* White text */
+    border: 1px solid #555;   /* Border color */
+    border-radius: 5px;       /* Rounded corners */
+    padding: 5px 10px;        /* Padding for button content */
+    font-size: 14px;          /* Font size */
+    font-family: Arial, sans-serif; /* Font family */
+}
+
+QPushButton:hover {
+    background-color: #4c4c4c; /* Lighter background on hover */
+    border: 1px solid #666;    /* Lighter border on hover */
+}
+
+QPushButton:pressed {
+    background-color: #2b2b2b; /* Darker background on press */
+    border: 1px solid #777;    /* Even lighter border on press */
+}
+
+QPushButton:disabled {
+    background-color: #555;    /* Gray background for disabled state */
+    color: #888;               /* Lighter text color for disabled state */
+    border: 1px solid #666;    /* Gray border for disabled state */
+}
+</string>
        </property>
        <property name="text">
         <string>Send</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label">
-       <property name="geometry">
-        <rect>
-         <x>40</x>
-         <y>460</y>
-         <width>61</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Message</string>
-       </property>
-      </widget>
       <widget class="QTextEdit" name="textEdit">
        <property name="geometry">
         <rect>
-         <x>110</x>
+         <x>20</x>
          <y>440</y>
-         <width>601</width>
-         <height>71</height>
+         <width>681</width>
+         <height>70</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QTextEdit {
+    background-color: #2b2b2b; /* Dark background */
+    color: #ffffff; /* White text */
+    border: 1px solid #555; /* Border color */
+    border-radius: 10px; /* Rounded corners */
+    padding: 10px; /* Padding inside the text box */
+    font-family: Consolas, monospace; /* Optional: Monospace font */
+    font-size: 14px; /* Font size */
+}
+
+QTextEdit:hover {
+    border: 1px solid #777; /* Slightly lighter border on hover */
+}
+</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Shape::NoFrame</enum>
        </property>
       </widget>
       <widget class="QTabWidget" name="tabWidget">
@@ -103,6 +186,54 @@
          <width>801</width>
          <height>401</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">/* QTabWidget General Style */
+QTabWidget {
+    background-color: #2b2b2b; /* Dark background for the tab widget */
+    border: 1px solid #555;    /* Border around the entire widget */
+    border-radius: 5px;        /* Rounded corners */
+}
+
+/* Tab Bar */
+QTabBar::tab {
+    background-color: #3c3c3c; /* Tab background */
+    color: #ffffff;            /* Tab text color */
+    border: 1px solid #555;    /* Border around the tab */
+    border-bottom: none;       /* Remove bottom border for active effect */
+    border-radius: 5px 5px 0 0; /* Rounded top corners for tabs */
+    padding: 5px 10px;         /* Padding inside each tab */
+    margin: 0 2px;             /* Spacing between tabs */
+    font-family: Arial, sans-serif; /* Font family for tabs */
+    font-size: 14px;           /* Font size for tabs */
+}
+
+/* Hover Effect for Tabs */
+QTabBar::tab:hover {
+    background-color: #4c4c4c; /* Lighter background on hover */
+}
+
+/* Active Tab */
+QTabBar::tab:selected {
+    background-color: #555;    /* Background for the active tab */
+    color: #ffffff;            /* Text color for the active tab */
+    border: 1px solid #666;    /* Border for the active tab */
+}
+
+/* Disabled Tab */
+QTabBar::tab:disabled {
+    background-color: #444;    /* Gray background for disabled tabs */
+    color: #888;               /* Light gray text color */
+}
+
+/* Content Area */
+QTabWidget::pane {
+    background-color: #2b2b2b; /* Background for the content area */
+    border: 1px solid #555;    /* Border around the content area */
+    border-radius: 0px 0px 5px 5px; /* Rounded bottom corners */
+    padding: 10px;             /* Padding inside the content area */
+}
+</string>
        </property>
        <property name="tabPosition">
         <enum>QTabWidget::TabPosition::North</enum>
@@ -125,6 +256,36 @@
            <width>781</width>
            <height>381</height>
           </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QListView {
+    background-color: #2b2b2b; /* Dark background */
+    color: #ffffff;           /* White text */
+    font-size: 14px;          /* Font size */
+    font-family: Arial, sans-serif; /* Font family */
+}
+
+QListView::item {
+    background-color: #2b2b2b; /* Default item background */
+    color: #ffffff;            /* Default item text color */
+    padding: 5px;              /* Padding around each item */
+}
+
+QListView::item:hover {
+    background-color: #3c3c3c; /* Lighter background on hover */
+    color: #ffffff;            /* Text color on hover */
+}
+
+QListView::item:selected {
+    background-color: #555;    /* Highlighted background for selected item */
+    color: #ffffff;            /* Highlighted text color for selected item */
+}
+
+QListView::item:selected:active {
+    background-color: #666;    /* Slightly darker background when active */
+    color: #ffffff;
+}
+</string>
          </property>
          <property name="horizontalScrollBarPolicy">
           <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
