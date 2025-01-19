@@ -19,7 +19,7 @@
     ui->listView->setModel(listViewModel);
 
     // Create the emoji button via EmojiManager
-    QToolButton* emojiButton = emojiManager->setupEmojiButton(this, 735, 490, 81, 32);
+    QPushButton* emojiButton = emojiManager->setupEmojiButton(this, 755, 490, 30, 30);
 
     // Connect the emojiSelected signal to insert emojis into the text edit
     connect(emojiManager, &EmojiManager::emojiSelected, this, [this](const QString& emoji) {
