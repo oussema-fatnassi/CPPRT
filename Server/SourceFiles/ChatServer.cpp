@@ -97,6 +97,8 @@ void ChatServer::broadcastMessage(const QString& message, QTcpSocket* sender) {
         clientSocket->write(fullMessage.toUtf8());
     }
     qDebug() << "Broadcast message from" << senderName << ":" << message;
+
+    emit generalMessageReceived(fullMessage);
 }
 
 void ChatServer::sendDirectMessage(const QString &message, const QString &targetName, QTcpSocket *sender) {
@@ -112,7 +114,6 @@ void ChatServer::sendDirectMessage(const QString &message, const QString &target
         sender->write(QString("SYSTEM:User '%1' not found").arg(targetName).toUtf8());
     }
 }
-
 
 QTcpSocket* ChatServer::getSocketByName(const QString& name) {
     for (auto it = m_clientNames.begin(); it != m_clientNames.end(); ++it) {
@@ -150,23 +151,11 @@ void ChatServer::handleDisconnection() {
     }
 }
 
-
-// void ChatServer::addToList(QTcpSocket* socket) {
-//     QString name = m_clientNames.value(socket, "Unknown");
-//     m_clientNamesList.append(name);
-// }
-
-// void ChatServer::removeFromList(QTcpSocket* socket) {
-//     QString name = m_clientNames.value(socket, "Unknown");
-//     m_clientNamesList.removeOne(name);
-// }
-
 QList<QString> ChatServer::getConnectedClients() {
     QList<QString> clientList = m_clientNames.values(); // Directly get usernames
     qDebug() << "Connected Clients:" << clientList;
     return clientList;
 }
-
 
 void ChatServer::disconnectClientByName(const QString &clientName) {
     QTcpSocket* clientSocket = getSocketByName(clientName);

@@ -122,11 +122,11 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="Client1">
+     <widget class="QWidget" name="GeneralChannel">
       <attribute name="title">
-       <string>Tab 1</string>
+       <string>General Channel</string>
       </attribute>
-      <widget class="QListWidget" name="listWidget_2">
+      <widget class="QListWidget" name="listWidgetGeneralMessages">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -175,7 +175,7 @@
      <x>0</x>
      <y>0</y>
      <width>1152</width>
-     <height>26</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>
