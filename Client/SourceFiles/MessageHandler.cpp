@@ -1,13 +1,16 @@
 #include "MessageHandler.hpp"
 #include "MessageBubbleManager.hpp"
 
+// Constructor for the MessageHandler class
 MessageHandler::MessageHandler(QObject* parent)
     : QObject(parent), generalChannelModel(nullptr) {}
 
+// Set the general channel model
 void MessageHandler::setGeneralChannelModel(QStandardItemModel* model) {
     generalChannelModel = model;
 }
 
+// Add a message to the general channel with the specified sender
 void MessageHandler::addMessageToGeneral(const QString& message , bool isLocalMessage) {
     if (generalChannelModel) {
         QStandardItem* item = new QStandardItem(message);
@@ -17,6 +20,7 @@ void MessageHandler::addMessageToGeneral(const QString& message , bool isLocalMe
     }
 }
 
+// Add a message to the specified tab with the specified sender
 void MessageHandler::addMessageToTab(QListView* listView, const QString& message, bool isLocalMessage) {
     if (!listView)
         return;
@@ -47,7 +51,7 @@ void MessageHandler::addMessageToTab(QListView* listView, const QString& message
     listView->scrollToBottom();
 }
 
-
+// Format the message with the specified sender
 QString MessageHandler::formatMessage(const QString& message, const QString& sender) {
     if (sender.isEmpty()) {
         return message;

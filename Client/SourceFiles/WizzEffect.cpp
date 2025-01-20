@@ -1,5 +1,7 @@
 #include "WizzEffect.hpp"
 
+// Constructor for the WizzEffect class
+// Initializes the target widget, shake distance, shake count, and shake duration
 WizzEffect::WizzEffect(QWidget *targetWidget, int shakeDistance, int shakeCount, int shakeDuration)
     : targetWidget(targetWidget), shakeDistance(shakeDistance), shakeCount(shakeCount),
     shakeDuration(shakeDuration), shakeIndex(0) {
@@ -7,6 +9,7 @@ WizzEffect::WizzEffect(QWidget *targetWidget, int shakeDistance, int shakeCount,
     connect(shakeTimer, &QTimer::timeout, this, &WizzEffect::performShake);
 }
 
+// Start the wizz effect
 void WizzEffect::start() {
     if (!targetWidget) return;
 
@@ -15,6 +18,7 @@ void WizzEffect::start() {
     shakeTimer->start(shakeDuration);
 }
 
+// Perform the shake effect
 void WizzEffect::performShake() {
     if (shakeIndex >= shakeCount) {
         shakeTimer->stop();

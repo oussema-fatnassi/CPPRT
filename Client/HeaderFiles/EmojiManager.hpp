@@ -1,3 +1,8 @@
+/*
+* Class for emoji manager
+* This class is used to manage the emojis in the chat application.
+*/
+
 #ifndef EMOJIMANAGER_HPP
 #define EMOJIMANAGER_HPP
 

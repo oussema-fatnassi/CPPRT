@@ -1,6 +1,7 @@
 #include "MainWindow.hpp"
 #include "./ui_MainWindow.h"
 
+// Constructor for the MainWindow class
 MainWindow::MainWindow(ChatServer* server, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -21,6 +22,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+// Set up the connections for the MainWindow
 void MainWindow::setupConnections()
 {
     // Connect the disconnect button
@@ -31,6 +33,7 @@ void MainWindow::setupConnections()
     connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::onSendMessageTab1Clicked);
 }
 
+// Disconnect a client by name from the server
 void MainWindow::onDisconnectButtonClicked() {
     // Retrieve the selected item in the client list
     QListWidgetItem *selectedItem = ui->listWidget->currentItem();
@@ -45,6 +48,7 @@ void MainWindow::onDisconnectButtonClicked() {
     }
 }
 
+// Disconnect all clients from the server
 void MainWindow::onDisconnectAllButtonClicked()
 {
     // Create a copy of the client list to avoid modifying the list while iterating
@@ -102,6 +106,3 @@ void MainWindow::onGeneralMessageReceived(const QString& message) {
         qDebug() << "listWidgetGeneralMessages widget not found in the UI.";
     }
 }
-
-
-

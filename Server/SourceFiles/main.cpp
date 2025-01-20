@@ -23,6 +23,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    // Get the IP address and port from the environment variables
     QString portStr = qgetenv("CHAT_SERVER_PORT");
 
     bool portOk;

@@ -2,6 +2,7 @@
 #include <QVBoxLayout>
 #include "MessageBubbleManager.hpp"
 
+// Constructor for the TabManager class
 TabManager::TabManager(QTabWidget* tabWidget, MessageHandler* messageHandler, QObject* parent)
     : QObject(parent), tabWidget(tabWidget), messageHandler(messageHandler) {}
 
@@ -17,6 +18,7 @@ QListView* TabManager::getOrCreateTab(const QString& username) {
     return createNewTab(username);
 }
 
+// Create a new tab for the given user and return the list view
 QListView* TabManager::createNewTab(const QString& username) {
     QWidget* newTab = new QWidget(tabWidget);
     QListView* listView = new QListView(newTab);
@@ -73,7 +75,7 @@ QListView* TabManager::createNewTab(const QString& username) {
     return listView;
 }
 
-
+// Check if a tab exists for the given user
 bool TabManager::hasTab(const QString& username) const {
     for (int i = 0; i < tabWidget->count(); ++i) {
         if (tabWidget->tabText(i) == username) {
@@ -83,6 +85,7 @@ bool TabManager::hasTab(const QString& username) const {
     return false;
 }
 
+// Get the name of the current tab
 QString TabManager::getCurrentTabName() const {
     return tabWidget->tabText(tabWidget->currentIndex());
 }
