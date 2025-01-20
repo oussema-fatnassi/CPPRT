@@ -142,12 +142,13 @@ void ChatServer::handleDisconnection() {
         m_clientNames.remove(socket);
         m_clients.remove(socket);
 
+        emit clientListChanged();
+        broadcastClientList();
+        
         // Ensure proper cleanup
         socket->close();
         socket->deleteLater(); // Schedule for deletion
 
-        emit clientListChanged();
-        broadcastClientList();
     }
 }
 
