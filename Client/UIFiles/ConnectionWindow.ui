@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ConnectionWindow</class>
+ <widget class="QMainWindow" name="ConnectionWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1068</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QMainWindow{
+    background-color: #3c3c3c; /* Dark button background */
+    color: #ffffff; 
+}</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QFrame" name="frame">
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Raised</enum>
+      </property>
+      <widget class="QPushButton" name="connectButton">
+       <property name="geometry">
+        <rect>
+         <x>420</x>
+         <y>430</y>
+         <width>181</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+    background-color: #3c3c3c; /* Dark button background */
+    color: #ffffff;           /* White text */
+    border: 1px solid #555;   /* Border color */
+    border-radius: 5px;       /* Rounded corners */
+    padding: 5px 10px;        /* Padding for button content */
+    font-size: 14px;          /* Font size */
+}
+
+QPushButton:hover {
+    background-color: #4c4c4c; /* Lighter background on hover */
+    border: 1px solid #666;    /* Lighter border on hover */
+}
+
+QPushButton:pressed {
+    background-color: #2b2b2b; /* Darker background on press */
+    border: 1px solid #777;    /* Even lighter border on press */
+}
+
+QPushButton:disabled {
+    background-color: #555;    /* Gray background for disabled state */
+    color: #888;               /* Lighter text color for disabled state */
+    border: 1px solid #666;    /* Gray border for disabled state */
+}
+</string>
+       </property>
+       <property name="text">
+        <string>CONNECT</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="usernameInput">
+       <property name="geometry">
+        <rect>
+         <x>370</x>
+         <y>220</y>
+         <width>300</width>
+         <height>50</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLineEdit {
+    background-color: #2b2b2b; /* Dark background */
+    color: #ffffff; /* White text */
+    border: 1px solid #555; /* Border color */
+    border-radius: 10px; /* Rounded corners */
+    padding: 10px; /* Padding inside the text box */
+    font-size: 14px; /* Font size */
+}
+
+QLineEdit:hover {
+    border: 1px solid #777; /* Slightly lighter border on hover */
+}
+</string>
+       </property>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1068</width>
+     <height>24</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
