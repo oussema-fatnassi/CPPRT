@@ -28,6 +28,36 @@ QListView* TabManager::createNewTab(const QString& username) {
     listView->setSpacing(12);
     listView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
+    listView->setStyleSheet(
+        "QListView {"
+        "    background-color: #2b2b2b;"
+        "    color: #ffffff;"
+        "    border: 1px solid #555;"
+        "    border-radius: 5px;"
+        "    padding: 5px;"
+        "    font-size: 14px;"
+        "    font-family: Arial, sans-serif;"
+        "}"
+        "QListView::item {"
+        "    background-color: #2b2b2b;"
+        "    color: #ffffff;"
+        "    padding: 5px;"
+        "    border-bottom: 1px solid #444;"
+        "}"
+        "QListView::item:hover {"
+        "    background-color: #3c3c3c;"
+        "    color: #ffffff;"
+        "}"
+        "QListView::item:selected {"
+        "    background-color: #555;"
+        "    color: #ffffff;"
+        "}"
+        "QListView::item:selected:active {"
+        "    background-color: #666;"
+        "    color: #ffffff;"
+        "}"
+        );
+
     QVBoxLayout* layout = new QVBoxLayout(newTab);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->addWidget(listView);

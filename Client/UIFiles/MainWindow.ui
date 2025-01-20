@@ -13,6 +13,12 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QMainWindow{
+    background-color: #3c3c3c; /* Dark button background */
+    color: #ffffff; 
+}</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
@@ -40,7 +46,6 @@
     border-radius: 5px;       /* Rounded corners */
     padding: 5px 10px;        /* Padding for button content */
     font-size: 14px;          /* Font size */
-    font-family: Arial, sans-serif; /* Font family */
 }
 
 QPushButton:hover {
@@ -68,7 +73,7 @@ QPushButton:disabled {
        <property name="geometry">
         <rect>
          <x>850</x>
-         <y>50</y>
+         <y>60</y>
          <width>181</width>
          <height>371</height>
         </rect>
@@ -81,7 +86,6 @@ QPushButton:disabled {
     border-radius: 5px;       /* Rounded corners */
     padding: 5px;             /* Padding inside the list view */
     font-size: 14px;          /* Font size */
-    font-family: Arial, sans-serif; /* Font family */
 }
 
 QListView::item {
@@ -125,7 +129,6 @@ QListView::item:selected:active {
     border-radius: 5px;       /* Rounded corners */
     padding: 5px 10px;        /* Padding for button content */
     font-size: 14px;          /* Font size */
-    font-family: Arial, sans-serif; /* Font family */
 }
 
 QPushButton:hover {
@@ -165,7 +168,6 @@ QPushButton:disabled {
     border: 1px solid #555; /* Border color */
     border-radius: 10px; /* Rounded corners */
     padding: 10px; /* Padding inside the text box */
-    font-family: Consolas, monospace; /* Optional: Monospace font */
     font-size: 14px; /* Font size */
 }
 
@@ -200,11 +202,9 @@ QTabBar::tab {
     background-color: #3c3c3c; /* Tab background */
     color: #ffffff;            /* Tab text color */
     border: 1px solid #555;    /* Border around the tab */
-    border-bottom: none;       /* Remove bottom border for active effect */
     border-radius: 5px 5px 0 0; /* Rounded top corners for tabs */
     padding: 5px 10px;         /* Padding inside each tab */
     margin: 0 2px;             /* Spacing between tabs */
-    font-family: Arial, sans-serif; /* Font family for tabs */
     font-size: 14px;           /* Font size for tabs */
 }
 
@@ -258,34 +258,32 @@ QTabWidget::pane {
           </rect>
          </property>
          <property name="styleSheet">
-          <string notr="true">QListView {
-    background-color: #2b2b2b; /* Dark background */
-    color: #ffffff;           /* White text */
-    font-size: 14px;          /* Font size */
-    font-family: Arial, sans-serif; /* Font family */
+          <string notr="true">      QListView {
+         background-color: #2b2b2b;
+         color: #ffffff;
+        border: 1px solid #555;
+       border-radius: 5px;
+    padding: 5px;
+   font-size: 14px;
 }
-
 QListView::item {
-    background-color: #2b2b2b; /* Default item background */
-    color: #ffffff;            /* Default item text color */
-    padding: 5px;              /* Padding around each item */
-}
-
-QListView::item:hover {
-    background-color: #3c3c3c; /* Lighter background on hover */
-    color: #ffffff;            /* Text color on hover */
-}
-
-QListView::item:selected {
-    background-color: #555;    /* Highlighted background for selected item */
-    color: #ffffff;            /* Highlighted text color for selected item */
-}
-
-QListView::item:selected:active {
-    background-color: #666;    /* Slightly darker background when active */
-    color: #ffffff;
-}
-</string>
+           background-color: #2b2b2b;
+           color: #ffffff;
+            padding: 5px;
+            border-bottom: 1px solid #444;
+        }
+        QListView::item:hover {
+           background-color: #3c3c3c;
+           color: #ffffff;
+        }
+        QListView::item:selected {
+            background-color: #555;
+            color: #ffffff;
+        }
+        QListView::item:selected:active {
+            background-color: #666;
+          color: #ffffff;
+}</string>
          </property>
          <property name="horizontalScrollBarPolicy">
           <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
