@@ -4,9 +4,11 @@
 #include <QAction>
 #include <QDebug>
 
+// Constructor for the EmojiManager class
 EmojiManager::EmojiManager(QObject* parent)
     : QObject(parent) {}
 
+// Create and return the emoji button with subcategories
 QPushButton* EmojiManager::setupEmojiButton(QWidget* parent, int x, int y, int width, int height) {
     // Create the emoji button
     QPushButton* emojiButton = new QPushButton("😊", parent);

@@ -1,3 +1,9 @@
+/**
+ * Main window class
+ * This class is responsible for the main window of the chat application.
+ * It handles the UI, the chat server, and the events.
+ */
+
 #ifndef MAINWINDOW_HPP
 #define MAINWINDOW_HPP
 
@@ -40,7 +46,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    ChatServer* m_chatServer; // Declaration of the member for the chat server
+    ChatServer* m_chatServer;
 
     void setupConnections();
 };

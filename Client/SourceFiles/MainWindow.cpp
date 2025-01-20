@@ -4,7 +4,7 @@
 #include "MessageBubbleManager.hpp"
 #include <QToolButton>
 
-    MainWindow::MainWindow(QWidget* parent)
+MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , emojiManager(new EmojiManager(this))
@@ -19,7 +19,7 @@
     ui->listView->setModel(listViewModel);
 
     // Create the emoji button via EmojiManager
-    QPushButton* emojiButton = emojiManager->setupEmojiButton(this, 755, 490, 30, 30);
+    QPushButton* emojiButton = emojiManager->setupEmojiButton(this, 720, 475, 30, 30);
 
     // Connect the emojiSelected signal to insert emojis into the text edit
     connect(emojiManager, &EmojiManager::emojiSelected, this, [this](const QString& emoji) {
@@ -58,6 +58,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+// Set the chat client for the main window
 void MainWindow::setChatClient(ChatClient* client)
 {
     this->chatClient = client;
@@ -80,6 +81,7 @@ void MainWindow::setChatClient(ChatClient* client)
     }
 }
 
+// Set up the main window UI components
 void MainWindow::setupMainWindowUI()
 {
     // Set up main window UI connections
@@ -110,8 +112,11 @@ void MainWindow::setupMainWindowUI()
 
     // Set initial focus to text edit
     ui->textEdit->setFocus();
+    ui->textEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    ui->textEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
+// Event filter for the main window
 bool MainWindow::eventFilter(QObject* obj, QEvent* event)
 {
     // Delegate event handling to UIEventHandler
@@ -121,12 +126,14 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event)
     return QMainWindow::eventFilter(obj, event);
 }
 
+// Handle general message received from the server
 void MainWindow::onGeneralMessageReceived(const QString& message)
 {
     messageHandler->addMessageToGeneral(message, false);
     ui->listView->scrollToBottom();
 }
 
+// Handle private message received from the server
 void MainWindow::onPrivateMessageReceived(const QString& senderName,
                                           const QString& recipient,
                                           const QString& dmContent)
@@ -167,6 +174,7 @@ void MainWindow::onPrivateMessageReceived(const QString& senderName,
     }
 }
 
+// Handle server disconnection
 void MainWindow::handleServerDisconnection()
 {
     // Create and configure the disconnection message box

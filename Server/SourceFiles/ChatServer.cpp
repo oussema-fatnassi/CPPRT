@@ -1,10 +1,12 @@
 #include "ChatServer.hpp"
 
+// Constructor for the ChatServer class
 ChatServer::ChatServer(QObject* parent) : QObject(parent) {
     m_tcpServer = new QTcpServer(this);
     connect(m_tcpServer, &QTcpServer::newConnection, this, &ChatServer::handleNewConnection);
 }
 
+// Start the server on the specified port
 bool ChatServer::start(quint16 port) {
     if (!m_tcpServer->listen(QHostAddress::Any, port)) {
         qDebug() << "Failed to start the server:" << m_tcpServer->errorString();
@@ -14,6 +16,7 @@ bool ChatServer::start(quint16 port) {
     return true;
 }
 
+// Disconnect a client by name from the server
 void ChatServer::handleNewConnection() {
     QTcpSocket* socket = m_tcpServer->nextPendingConnection();
     connect(socket, &QTcpSocket::readyRead, this, &ChatServer::handleReadyRead);
@@ -24,6 +27,7 @@ void ChatServer::handleNewConnection() {
     emit clientListChanged();
 }
 
+// Broadcast the updated client list to all connected clients
 void ChatServer::broadcastClientList() {
     // Create the user list message
     QString usersList = "USERS:";
@@ -39,6 +43,7 @@ void ChatServer::broadcastClientList() {
     qDebug() << "Broadcasted updated user list:" << names;
 }
 
+// Handle incoming messages from clients and process them accordingly
 void ChatServer::handleReadyRead() {
     QTcpSocket* senderSocket = qobject_cast<QTcpSocket*>(sender());
     if (!senderSocket) return;
@@ -89,6 +94,7 @@ void ChatServer::handleReadyRead() {
     }
 }
 
+// Broadcast a message to all connected clients
 void ChatServer::broadcastMessage(const QString& message, QTcpSocket* sender) {
     QString senderName = m_clientNames.value(sender, "Unknown");
     QString fullMessage = "BROADCAST:" + senderName + ": " + message;
@@ -101,6 +107,7 @@ void ChatServer::broadcastMessage(const QString& message, QTcpSocket* sender) {
     emit generalMessageReceived(fullMessage);
 }
 
+// Send a direct message to a specific client
 void ChatServer::sendDirectMessage(const QString &message, const QString &targetName, QTcpSocket *sender) {
     QString senderName = m_clientNames.value(sender, "Unknown");
     QTcpSocket *targetSocket = getSocketByName(targetName);
@@ -115,6 +122,7 @@ void ChatServer::sendDirectMessage(const QString &message, const QString &target
     }
 }
 
+// Get the socket associated with a given username
 QTcpSocket* ChatServer::getSocketByName(const QString& name) {
     for (auto it = m_clientNames.begin(); it != m_clientNames.end(); ++it) {
         if (it.value() == name) {
@@ -124,6 +132,7 @@ QTcpSocket* ChatServer::getSocketByName(const QString& name) {
     return nullptr;
 }
 
+// Handle client disconnection
 void ChatServer::handleDisconnection() {
     QTcpSocket* socket = qobject_cast<QTcpSocket*>(sender());
     if (socket) {
@@ -142,21 +151,24 @@ void ChatServer::handleDisconnection() {
         m_clientNames.remove(socket);
         m_clients.remove(socket);
 
+        emit clientListChanged();
+        broadcastClientList();
+        
         // Ensure proper cleanup
         socket->close();
         socket->deleteLater(); // Schedule for deletion
 
-        emit clientListChanged();
-        broadcastClientList();
     }
 }
 
+// Get the list of connected client usernames
 QList<QString> ChatServer::getConnectedClients() {
     QList<QString> clientList = m_clientNames.values(); // Directly get usernames
     qDebug() << "Connected Clients:" << clientList;
     return clientList;
 }
 
+// Disconnect a client by name
 void ChatServer::disconnectClientByName(const QString &clientName) {
     QTcpSocket* clientSocket = getSocketByName(clientName);
 

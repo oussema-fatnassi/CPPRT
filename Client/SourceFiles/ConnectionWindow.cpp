@@ -7,6 +7,8 @@
 #include <QFileInfo>
 #include "MainWindow.hpp"
 
+// Constructor for the ConnectionWindow class
+// Initializes the UI and connects the signal to the slot
 ConnectionWindow::ConnectionWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::ConnectionWindow), chatClient(nullptr) {
     ui->setupUi(this);
@@ -15,17 +17,18 @@ ConnectionWindow::ConnectionWindow(QWidget *parent)
     setupConnectionWindowUI();
 }
 
-
 ConnectionWindow:: ~ConnectionWindow()
 {
     delete ui;
 }
 
+// Set up the UI for the ConnectionWindow
 void ConnectionWindow:: setupConnectionWindowUI()
 {
     connect(ui->connectButton, &QPushButton::clicked, this, &ConnectionWindow::onButtonConnectionClicked);
 }
 
+// Handle the connection button click event
 void ConnectionWindow::onButtonConnectionClicked() {
     // Fetch the text from the username input field
     QString username = ui->usernameInput->text();

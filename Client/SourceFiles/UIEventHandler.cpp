@@ -1,5 +1,6 @@
 #include "UIEventHandler.hpp"
 
+// Constructor for the UIEventHandler class
 UIEventHandler::UIEventHandler(QTextEdit* textEdit, QPushButton* sendButton,
                                QListWidget* clientsList, ChatClient* chatClient,
                                TabManager* tabManager, MessageHandler* messageHandler,
@@ -8,6 +9,7 @@ UIEventHandler::UIEventHandler(QTextEdit* textEdit, QPushButton* sendButton,
     clientsList(clientsList), chatClient(chatClient),
     tabManager(tabManager), messageHandler(messageHandler) {}
 
+// Handle the key press event
 bool UIEventHandler::handleKeyPress(QObject* obj, QEvent* event) {
     if (obj == textEdit && event->type() == QEvent::KeyPress) {
         QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
@@ -27,6 +29,7 @@ bool UIEventHandler::handleKeyPress(QObject* obj, QEvent* event) {
     return false;
 }
 
+// Handle the send button click event
 void UIEventHandler::onSendClicked() {
     QString message = textEdit->toPlainText();
     if (message.isEmpty()) return;
@@ -46,11 +49,14 @@ void UIEventHandler::onSendClicked() {
 
     textEdit->clear();
 }
+
+// Handle the user double click event
 void UIEventHandler::onUserDoubleClicked(QListWidgetItem* item) {
     QString username = item->text();
     tabManager->getOrCreateTab(username);
 }
 
+// Update the user list in the chat application
 void UIEventHandler::updateUserList(const QStringList& users) {
     clientsList->clear();
     for (const QString& user : users) {
@@ -58,11 +64,13 @@ void UIEventHandler::updateUserList(const QStringList& users) {
     }
 }
 
+// Set the chat client
 void UIEventHandler::setChatClient(ChatClient* chatClient) {
     this->chatClient = chatClient;
     qDebug() << "ChatClient set in UIEventHandler!";
 }
 
+// Check if the chat client exists
 bool UIEventHandler::hasChatClient() const {
     return this->chatClient != nullptr;
 }

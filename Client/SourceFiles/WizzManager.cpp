@@ -1,6 +1,8 @@
 #include "WizzManager.hpp"
 #include <QDebug>
 
+// Constructor for the WizzManager class
+// Initializes the clients list, chat client, effect parent, wizz sound, and audio output
 WizzManager::WizzManager(QListWidget* clientsList, ChatClient* chatClient,
                          QWidget* effectParent, QObject* parent)
     : QObject(parent), clientsList(clientsList), chatClient(chatClient),
@@ -25,6 +27,7 @@ WizzManager::WizzManager(QListWidget* clientsList, ChatClient* chatClient,
     });
 }
 
+// Handle the wizz button click event
 void WizzManager::onWizzButtonClicked() {
     QList<QListWidgetItem*> selectedItems = clientsList->selectedItems();
     if (!selectedItems.isEmpty()) {
@@ -42,6 +45,7 @@ void WizzManager::onWizzButtonClicked() {
     }
 }
 
+// Trigger the wizz effect
 void WizzManager::triggerWizzEffect() {
     qDebug() << "Wizz effect triggered!";
     if (wizzSound) {
@@ -64,7 +68,7 @@ void WizzManager::triggerWizzEffect() {
     wizzEffect->start();
 }
 
-
+// Set the chat client
 void WizzManager::setChatClient(ChatClient* chatClient) {
     this->chatClient = chatClient;
     qDebug() << "ChatClient set in WizzManager!";

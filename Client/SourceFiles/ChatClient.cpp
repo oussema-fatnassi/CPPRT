@@ -3,6 +3,8 @@
 #include <QDebug>
 #include <QTcpSocket>
 
+// Constructor for the ChatClient class
+// Initializes the TCP socket and connects the signals to the corresponding slots
 ChatClient::ChatClient(const QString &name, QObject* parent)
     : QObject(parent), m_name(name) {
     m_tcpSocket = new QTcpSocket(this);
@@ -11,6 +13,7 @@ ChatClient::ChatClient(const QString &name, QObject* parent)
     connect(m_tcpSocket, &QTcpSocket::disconnected, this, &ChatClient::handleDisconnected);
 }
 
+// Connects to the server with the specified host and port
 bool ChatClient::connectToServer(const QHostAddress& host, quint16 port) {
     qDebug() << "Attempting to connect to server at" << host.toString() << "on port" << port;
 
@@ -34,7 +37,7 @@ bool ChatClient::connectToServer(const QHostAddress& host, quint16 port) {
         return false;  // Connection failed
     }
 }
-
+ 
 void ChatClient::sendMessage(const QString& message) {
     if (m_tcpSocket->state() == QTcpSocket::ConnectedState) {
         m_tcpSocket->write(message.toUtf8());
@@ -43,6 +46,7 @@ void ChatClient::sendMessage(const QString& message) {
     }
 }
 
+// Send direct messages to a specific user
 void ChatClient::sendDirectMessage(const QString& targetName, const QString& message) {
     if (m_tcpSocket->state() == QTcpSocket::ConnectedState) {
         QString dmMessage = "DM:" + targetName + ":" + message;
@@ -56,6 +60,7 @@ void ChatClient::handleConnected() {
     qDebug() << "Connected to server";
 }
 
+// Handle incoming messages from the server
 void ChatClient::handleReadyRead() {
     QByteArray data = m_tcpSocket->readAll();
     QString message = QString::fromUtf8(data);
@@ -105,12 +110,14 @@ void ChatClient::handleReadyRead() {
     }
 }
 
+// Handle disconnection from the server
 void ChatClient::handleDisconnected() {
     qDebug() << "Disconnected from server";
     m_onlineUsers.clear();
     emit disconnected();
 }
 
+// Check if the client is connected to the server
 bool ChatClient::isConnected() const {
     return m_tcpSocket->state() == QTcpSocket::ConnectedState;
 }
